@@ -1,0 +1,383 @@
+FramePHP - because you must work less
+======================================
+
+Directory structure
+--------------------------------------
+
+/
+	index.php				entry script
+	
+	style/					used for store the style of themes of the application
+		css/				css folder. Per i temi si possono creare delle cartelle (una per ogni tema) e dentro ognuna di queste mettere i 							file css necessari per quel tema. 
+		img/				images folder. Per i temi si possono creare delle cartelle (una per ogni tema) e dentro ognuna di queste mettere 							le immagini necessarie per quel tema. 
+		
+	application/			the server side of the site, user may work on this folder for implementation of the application
+		cache/				cache for the current application, user don't need to change it
+		config/				application configuration
+			system.php		the reserved configuration for the framework, the user use it to change framework behavior
+			...
+		controller/			controller folder
+		lib/				user class need for the application 
+		locale/				used for i18n, it is a normal gettext folder
+			it_IT/
+			en_EN/
+			...
+		model/				model folder, it contains all the classes that the controller use for data manipulations
+		view/				View folder, it contains all the template for display the site
+						per l'implementazione dei temi si può creare una cartella chiamata layout che contiene delle cartelle (una per 							ogni tema) e tali cartelle contengono i template principali, essi vengono ereditati da tutte le altre pagine.
+						In questo modo cambiando il tema si può cambiare anche il layout generale
+		
+	resource/				in this folder user store all the file the application make available to clients, it determine the content of the site
+		img/				images, and not for the theme but for the gallery, personal photo of the about page, various photo in the text pages ...
+		text/				contents of the text pages like about page, contacts page ... 
+		xml/				structured contents for the pages, this file must to be transformed for the output for the specific pages
+							an example can be the navigation menu that is a xml and it is transform in ul lists for the output
+			xsl/			xslt files used for transform xml to the output, it also can be transformed from php too
+			rules/			dtd and xmlschema files
+			bin/			programs you want the user can download
+			
+	script/					used for store the js files used for application
+		
+	system/					folder that contain the framework, user don't need to change its contents
+		lib/				main classes, it may also can be used by the application
+			System/			system classes, only used by the framework
+			Twig/			folder that contains all the classes for the template engine, it may also be used by the user
+		config/				configuration for the core class
+			main.php		main framework configuration
+			twig.php		configuration for twig
+			...
+		view/				system templates for show errors
+		...
+
+Fondamenti
+======================================
+
+Classi ed Autoloader
+--------------------------------------
+
+Un modo ampiamente utilizzato per la strutturazione delle classi è avere una classe per ogni file che ha lo stesso nome della classe. Le classi hanno il primo carattere maiuscolo. Tutti i file che contengono classi hanno estensione '.php' e risiedono tutte in una cartella comune che solitamente viene chiamata 'lib'.
+Ad esempio una classe che si chiama `MyClass` risiede nel file `'/lib/MyClass.php'`.
+
+Nel caso si voglia una strutturazione più complessa dove ci siano sotto-cartelle le classi devono avere come nome strutturato nel seguente modo:
+
+	SubFolder1_SubFolder2_ClassName
+
+Il semplice ragionamento che sta alla base di questa strutturazione è pensare che al posto del carattere '_' ci sia '/'. Nell'esempio precedente la classe sarà contenuta nel file `'/lib/SubFolder1/SubFolder2/ClassName.php'`. Naturalmente non c'è un limite alle sotto-cartelle che si possono fare.
+
+Questa rigida struttura viene solitamente adottata nel caso ci sia un autoloader poichè quest'ultimo ha bisogno di capire il file da includere nel caso di una `new` in modo deterministico. In presenza di un autoloader infatti non c'è alcun bisogno di includere i files che contengono le classi che si vogliono usare, al momento in cui ci sia un istruzione del tipo:
+
+	$t = new My_Class('myparam1', 'myparam2', ...);
+
+L'autoloader automaticamente entra in gioco includendo il file `'/lib/My/Class.php'` che contiene la classe `My_Class`.
+
+
+Url routing
+======================================
+
+Principi fondamentali
+--------------------------------------
+
+Il sistema di Routing accetta URL che hanno una semplice forma di questo tipo:
+
+	http://www.example.com/myclass/myfunction/param1/param2/...
+
+l'url, grazie al modulo rewrite di apache, viene trasformata in questa forma:
+
+	http://www.example.com/index.php/myclass/myfunction/param1/param2/...
+
+index.php diventa quindi la porta di ingresso per tutte le richieste, queste vengono smistate mediante un componente chiamato router. Tale router ha l'incarico di chiamare un opportuno metodo del Controller con i parametri specificati.
+
+
+Routing
+--------------------------------------
+
+Per ottenere degli url piacevoli il router trasforma tutti i caratteri della richiesta in minuscolo. Il router poi estrae il nome della classe specificata e trasforma la prima lettera in miuscolo. Nell'esempio precedente il nome della classe sarà `Myclass`. Tale classe viene cercata nel file `'/application/Controller/Classname.php'`. Successivamente, una volta istanziata questa classe viene chiamato il metodo `'myfunction'` con i relativi parametri.
+
+### Uppercase letters
+
+Nonostante abbiamo url con tutti i caratteri in minuscolo possiamo ottenere lettere maiuscole ponendo il carattere '-' prima della lettera che si intende trasformare in maiuscolo. Nell'esempio precedente sarebbe stato bello poter chiamare una classe con il nome `MyClass` ed il metodo con il nome `myFunction`.
+Per specificare questo tipo di nomi l'url dell'esempio precedente diventa:
+
+	http://www.example.com/my-class/my-function/param1/param2/...
+
+Facciamo ancora un'altro esempio:
+
+	http://www.example.com/my-class/-my-function/p-ar-am--1-/-para-m-2
+	
+Verrà chiamato il metodo MyFunction('pArAm1','ParaM2') della classe MyClass.
+
+### `GET` Variables
+
+Come si può notare l'uso delle variabili GET diventa implicito una volta che si passano i parametri alle funzioni ma non vogliamo escludere la possibilità di usarle comunque. Per specificare dei parametri GET si usa il classico carattere '?' che determina l'inizio dell'elenco di tali parametri. Tale elenco viene scartato dal router e non influenza il processo di routing.
+
+Esempio:
+
+	http://www.example.com/my-class/my-function/myparam?var=varValue
+
+Ricordiamo che nè il nome di tali parametri nè il contenuto vengono in qualche modo alterati.
+
+### Anchors
+
+L'uso delle ancore viene anch'esso concesso e non influenza il processo di routing.
+
+Esempio:
+
+	http://www.example.com/my-class/my-function/my-param#myAnchor
+
+Anche in questo caso l'ancora passata non viene alterata in alcun modo e non influenza il processo di routing.
+
+### Index
+
+Nel caso non venga specificata un url il router non ha modo di sapere il routing da effettuare, per questo motivo si può configurare il router settando `route_index` con un url appropiata. Nel caso ad esempio viene specificato come valore 'home/index' verrà chiamata la funzione `index()` della classe `Home`.
+
+### Url Overrides
+
+Nel caso di url particolari possiamo modificare il comportamento standard del router settando opportunamente `route_overrides`. Tale settaggio accetta un array associativo che ha per indice un'espressione regolare e per valore un'altra espressione. L'operazione che viene fatta è semplicemente effettuare prima una `preg_match` per assicurarsi che ci sia un match della regola e poi un `preg_replace` e possono essere quindi usati tutti i valori che si usano normalmente in queste funzioni. Per capire subito facciamo un esempio esplicativo:
+
+	array(
+		'/^about$/' => 'my-info/show-about/me',
+		'/^about\/george$/' => 'my-info/show-about/george',
+		'/^article\/([0-9]+)$/' => 'my-article/show/$1',
+		
+		'/^multi-rewrite-example$/' => 'rewrite-number-1',
+		'/^rewrite-number-5$/' => 'my-class/rewrite-end',
+		'/^rewrite-number-([0-9]+)$/e' => '\'rewrite-number-\' . (\\1 + 1)'
+	)
+
+In questo esempio:
+- Se l'url è `'http://www.example.com/about'` la regola farà in modo di chiamare la funzione `showAbout('me')` della classe MyInfo.
+- Se l'url è `'http://www.example.com/about/george'` la regola farà in modo di chiamare la funzione `showAbout('george')` della classe MyInfo.
+- Se l'url è `'http://www.example.com/article/234'` la regola farà in modo di chiamare la funzione `show(234)` della classe MyArticle.
+- Se l'url è `'http://www.example.com/multi-rewrite-example'` la regola cambia l'url in `'rewrite-number-1'` poichè fa match con la quarta regola, tale url poi viene cambiata con `'rewrite-number-2'` poichè fa match con la sesta regola. Il ciclo continua fino a che si arriva all'url `'rewrite-number-5'`. In questo caso ci sono due regole che fanno match (la quinta e la sesta) ma ha priorità maggiore l'url che viene prima sulla lista e quindi viene sostituita con `'my-class/rewrite-end'` che fa in modo di chiamare la funzione `rewriteEnd()` della classe `MyClass`.
+
+Nel caso ci siano loop il router si arresta in modo predefinito alla decima volta che si tenta di riscrivere un url lanciando un'eccezione. Nel caso dell'ultimo esempio cambiando l'ordine della quinta e sesta regola si ottiene un loop e quindi un eccezione da parte del router.
+
+
+Controller
+======================================
+
+Principi fondamentali
+--------------------------------------
+
+Il Controller è quella parte che si interfaccia con le richieste e che prende le decisioni sulle azioni da eseguire in base alla richiesta specificata. Il Controller è composto da una serie di classi che hanno questa struttura:
+
+	class Myclass {
+		function myfunction($param1, $param2, ...){
+			...
+		}
+	}
+
+Per esempio se vogliamo realizzare un Blog e possiamo costruire una classe che chiamiamo `Blog`. Tale classe ha diversi metodi: 'insertComment, showAllPost, ecc...'. Tali metodi quindi fanno in modo di gestire quella parte dell'applicazione che è il Blog.
+
+
+Regole
+--------------------------------------
+
+ - La prima lettera di tali classi deve essere sempre maiuscola.
+ - Ad ogni file corrisponde una classe. Ad esempio la classe `Blog` deve essere posta sul file `'Blog.php'`.
+ - Tutte i Controller vengono messi nella cartella `/application/controller`
+
+
+
+Metodi particolari
+--------------------------------------
+
+### `_index`
+Se viene chiamato un Controller ma non viene specificata un metodo la funzione che viene chiamata è `_index`.
+
+### `_filter`
+Se viene implementato il metodo `_filter` tutte le chiamate vengono dirottate su di esso. Il primo parametro che viene passato è il nome del metodo che si intendeva chiamare. Tale metodo ha quindi questa struttura:
+
+	function _filter($function, $param1, $param2, ...){
+		...
+	}
+
+
+Hello World
+--------------------------------------
+
+Creiamo un file chiamato Hello.php e scriviamo dentro:
+
+	class Hello {
+		function world($name){
+			echo 'Hello World ' . $name . '!';
+		}
+	}
+
+Scriviamo l'url seguente:
+
+	http://www.host.org/Hello/world/pippo
+
+e il risultato sarà:
+
+	Hello World Pippo!
+
+
+View
+======================================
+
+Principi fondamentali
+--------------------------------------
+
+Il View è quella parte che è in grado di rappresentare i dati. Questa parte viene spesso cambiata perchè si decide di cambiare il layout dell'applicazione oppure gli stessi dati devono poter essere rappresentati in modo diverso a seconda del dispositivo. Il View è quindi molto importante poichè permette di separare la parte di generazione dei dati da quella che effettivamente li usa per fornire una loro rappresentazione. Il View per lo scopo per cui è pensato viene solitamente utilizzato dal Controller per mandare in output i risultati che il Controller ha ottenuto. Vedremo comunque che anche il Model può usare il View.
+
+In questo framework si è scelto a differenza di molti altri di usare un motore di template molto versatile: Twig. Questo motore di template è molto performante ed è più potente in molti aspetti di rivali molto più famosi come Smarty che è fra i più famosi.
+
+[TODO] NOTA:: Decidere se è meglio fare un Twig un po personalizzato con una sintassi simile al motore di template di RubyOnRail cioè preferire la notazione:
+	invece di {# #} per i commenti, {% %} per il codice procedurale e {{ }} per le variabili
+	fare      <# #>			<% %>				  <= >
+
+[TODO] I 6 link alla guida completa di twig
+
+
+Utilizzo
+--------------------------------------
+
+Per chiamare il View si utilizza la classe `System` ed in particolare la funzione `loadView()`. Tale funzione restituisce un oggetto di tipo System_View, tale oggetto quando viene istanziato crea un `Twig_Environment` (leggere guida twig) e lo crea usando un loader che è il `Twig_Loader_Filesystem`. A tale environment in modo predefinito vengono caricate le estensioni 'i18n' ed 'escaper', si può comunque cambiare tale comportamento dalle configurazioni di sistema. Il loader viene creato specificando che la cartella dei template si trova in `'/application/view'` e quindi twig in sostanza viene configurato in modo che la sua root sia proprio tale cartella. Se volessimo ad esempio porre in output un template che si trova in `'/application/view/me/about.html'` dovremmo specificare come nome del template `'me/about.html'`.
+
+### `display($template [, $variables])`
+
+E' il metodo più importante del View poichè permette di porre in output il risultato di trasformazione di un determinato template specificato in `$template` e con una serie di variabili specificate in `$variables`. Il metodo, da come si nota dal prototipo, può essere chiamato senza specificare alcuna variabile e questo accade tutte le volte che abbiamo a che fare con pagine statiche.
+
+### `render($template [, $variables])`
+
+Nel caso non volessimo stampare in output il risultato di una trasformazione di un template ma metterlo in una variabile il metodo `render` fa proprio questo. Per il resto si comporta esattamente come display. 
+
+### Themes
+
+Il View mette a disposizione degli aiuti nel caso in cui si ci ritrovi a gestire applicazioni che necessitano cambi di tema in modo dinamico. Per prima cosa, dalla configurazione dell'applicazione `'/applicaton/configsystem/main.php'` è possibile settare `'default_theme'` indicando il nome del tema di default, se esso non viene settato il tema di default sarà la stringa vuota. Inoltre View mette a disposizione un metodo `setTheme($template)` che fa in modo di settare il tema corrente.
+
+### Help Variables
+
+I metodi citati aggiungono sempre delle variabili all'array passato come parametro aggiungendo 'ThemeName' e 'WebRoot', anche se non è stato passato alcun array.
+'ThemeName' è una variabile che contiene il tema corrente mentre 'WebRoot' da indicazioni sulla root del sito vista dal client. 
+
+#### WebRoot
+Solitamente la root del sito corrisponde alla root effettiva e quindi se volessimo un immagine che si trova su `'/resource/img/miaimm.jpg'` useremo sempre questa stessa path. Nel caso invece tutta l'applicazione non si trovasse nella root, ad esempio si trovasse in `'/blog'`, la cartella style adesso si trova in `'/blog/resource/img/miaimm.jpg'`. In questo caso per riuscire a riferirci ancora all'immagine di prima dovremmo cambiare tutti i percorsi, usando WebRoot invece tutti i percorsi si autoriconfigurano con la nuova root. In generale basta che ogni volta che si ci riferisce ad un immagine si ci ricordi di mettere all'inizio la variabile WebRoot, ad esempio `<img href="{{ WebRoot}}/resource/img/miaimm.jpg" />`
+
+#### ThemeName
+
+
+
+
+The View can be called from the controlled in this way
+
+	$this->view->display('file.html', array('var1' => 'value1', ...));
+	
+The template engine will process the file in the first parameter with the variable passed from the second parameter
+If you can't echo the content of the template processing you can also use `render` function instead `display` function.
+`render` return the processing template like a string.
+
+The templates is are cassic twig template files. Twig is set to cache this file for performance. 
+
+
+Theme
+--------------------------------------
+
+If you need to have a lot of theme the View can help you setting the current theme.
+
+### Configure in application configutation
+
+You can set `current_theme` setting with the name of the current theme. for example:
+
+	'current_theme' => 'bluetheme'
+
+### Configure at run-time
+
+You can set the theme calling a function `setTheme` before display (or render) it, for example:
+
+	$this->view->setTheme('bluetheme');
+	$this->view->display('home.html');
+
+
+Internazionalization
+--------------------------------------
+
+Twig template engine also have the internazionalization expansion. It work with normal gettext function
+You may find information for it use in the twig documentation
+
+
+Model
+--------------------------------------
+
+For call a Model from a Controller you can use the loadModel function
+
+example:
+
+	$this->loadModel('Folder1/ClassC');
+
+The loaded model is a class `Folder1_ClassC` and in `"/application/model/Folder1/ClassC.php"` folder
+
+A model is a class that extends `System_Model` and this is a skeleton of this class
+
+	class MyModel extend System_Controller {
+		function _init(){
+			
+		}
+	}
+
+When the model is loaded if exists the _init function is called for inizialize the model. In this function you can connect to a database or other.
+
+### loadDatabase
+
+Model have a function `loadDatabase($db_name)` that help you to a simple connection to a database. This function return a PDO object connected with the database specificated. If you want for example load a database called `'db1'` you can call the `loadDatabase` function in this way:
+
+	$this->loadDatabase('db1');
+
+and then the PDO object is in `$this->db1` and you can call the `exec` PDO function in this way:
+
+	$this->db1->exec('create table Example ( id integer primary key )');
+
+The configuration for databases is in the configuration file `"application/config/database.php"` and can be set like the following example:
+
+	'db1' => array(
+		'dsn' => 'mysql:host=localhost;dbname=prove',
+		'user' => 'myuser',
+		'password' => 'mypassword',
+		'pdo_options' => array(...)
+	)
+
+the `'dsn'` setting is a classic dsn string used for create the php PDO class. 
+
+### Examples
+
+File `"application/config/database.php"`:
+
+	<?php
+		return array(
+			'db1' => array(
+				'dsn' => 'mysql:host=localhost;dbname=example',
+				'user' => 'exampleuser',
+				'password' => 'examplepassword',
+			)
+		);
+	
+	?>
+
+
+File `"application/model/Examples/Object.php"`:
+
+	<?php
+		class Examples_Object extends System_Model {
+			public function _init(){
+				$this->loadDatabase('db1');
+			}
+		
+			public function insertObject($obj){
+				$this->db1->exec('insert into Object(obj) values(\'' . $obj . '\')');
+			}
+		}
+	?>
+
+
+File `"application/controller/Object.php"`
+
+<?php
+	class Object extends System_Controller {
+		function insert(){
+			$Obj = $this->loadModel('Examples/Object');
+			$Obj->insertObject('dsicn');
+		}
+	}
+?>
+

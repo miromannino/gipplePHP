@@ -1,0 +1,67 @@
+<?php
+
+	class System_View {
+		
+		private $twig;
+		private $theme;
+		
+		/*Public functions -----------------------------------------*/
+		public function display($template, $variables = array()){
+			$t = $this->twig->loadTemplate($template . _Template_Ext);
+			$this->setVariables($variables);
+			$t->display($variables);
+		}
+		
+		public function render($template, $variables = array()){
+			$t = $this->$twig->loadTemplate($template . _Template_Ext);
+			$this->setVariables($variables);
+			return $t->render($variables);
+		}
+		
+		public function setTheme($name){
+			$this->theme = $name;
+		}
+		/*------------------------------------------------------------*/
+		
+		public function __construct(){
+			//loading configurations
+			$app_config = System_Configuration::getAppConfig('main');
+			$twig_config = System_Configuration::getSysConfig('twig');
+			
+			//set default theme
+			if(isset($app_config['default_theme']))
+				$this->theme = $app_config['default_theme'];
+			else
+				$this->theme = '';
+			
+			//other configurations
+			$config = array();
+			if($twig_config['cache']){
+				$config['cache'] = AppPath . '/cache/twig';
+				$config['auto_reload'] = true;
+				$config['strict_variables'] = true;
+			}
+			
+			//creating twig object
+			$loader = new Twig_Loader_Filesystem(_Path_View);
+			$this->twig = new Twig_Environment($loader, $config);
+			
+			//loading extensions
+			if($twig_config['i18n_extension'])
+				$this->twig->addExtension(new Twig_Extension_I18n());
+				
+			if($twig_config['escaper_extension'])
+				$this->twig->addExtension(new Twig_Extension_Escaper(true));
+				
+			//configuring syntax
+			$lexer = new Twig_Lexer($this->twig, $twig_config['syntax']);
+			$this->twig->setLexer($lexer);
+		}
+		
+		private function setVariables(&$variables){
+			$variables['ThemeName'] = $this->theme;
+			$variables['WebRoot'] = WebRoot;
+		}
+		
+	}
+?>

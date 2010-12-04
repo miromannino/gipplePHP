@@ -1,0 +1,11 @@
+RewriteEngine On
+Options -Multiviews
+RewriteBase /
+
+# if is not in the root: 
+# RewriteBase /path/to/subfolder
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond $1 !^(index\.php|style|script|resource)
+
+RewriteRule ^(.*)$ index.php/$1 [L]
