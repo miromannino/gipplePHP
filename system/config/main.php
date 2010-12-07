@@ -39,5 +39,5 @@
 	//System::_init();
 	
 	/* Errors -----------------*/
-	System_Error::set_handler();
+	System_Error::set_handler(_Error_Display);
 ?>

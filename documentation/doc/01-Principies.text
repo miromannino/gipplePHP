@@ -86,6 +86,8 @@ Index.php presenta una parte di configurazione base dell'applicazione. Queste co
    indica la root vista dal client. Se abbiamo che l'applicazione è nella root del nostro server `'host.it'` allora abbiamo che `WebRoot = ''` e nell'html quando scriviamo `<img href="<%=WebRoot%>/resource/img/ciao.jpg"/>` il browser del client prenderà come immagine `'http://host.it/resource/img/ciao.jpg'`.
    Se abbiamo invece che la nostra applicazione è in una sottocartella (ad esempio in '/miosito') allora abbiamo `WebRoot = '/miosito' e di conseguenza usando lo stesso codice html visto prima il client questa volta prenderà come immagine `'http://host.it/miosito/resource/img/ciao.jpg'`
 
+- `define('_Error_Display', false);`
+	che dice se tutti gli errori che l'applicazione può generare sono visti o meno. Nel caso di pubblicazione infatti è sempre meglio metterla a `false` poichè avere gli errori abilitati è sempre un ottimo strumento per gli attaccanti.
 
 ### Impostazioni base di `.htaccess`
 

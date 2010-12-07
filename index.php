@@ -9,6 +9,8 @@
 						  //the server root value is '' 
 	/* ---------------------------------------------------------------*/
 	
+	define('_Error_Display', true);
+	
 	//Performance Test
 	/*
 	require_once(SysPath . '/lib/Benchmark.php');

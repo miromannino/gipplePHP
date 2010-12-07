@@ -27,6 +27,8 @@
 		const E_DATABASE_NOTFOUND = 150;
 		const E_DATABASE_WRONGCONFIG = 151;
 		
+		private static $display_errors;
+		
 		public static function showSystemError($message, $type){
 			$errors = include(SysPath . '/config/errors' . _Ext);
 			
@@ -38,12 +40,15 @@
 				header("HTTP/1.0 500 Internal Server Error");
 			}
 			
-			$type = isset($errors[$type]) ? $errors[$type] : $type;
-			echo '<div style="border: 1px solid #FF0000; padding-left: 20px; margin: 10px 2px 10px 2px;">';
-			echo '<p style="font-weight:bold; font-size:18px;">System Exception</p>';
-			if($type != 0) echo '<p style="font-weight:bold; font-size:16px;">' . $type . '</p>';
-			if(strlen($message) > 0) echo '<p style="font-weight:normal; font-size:16px;">' . $message . '</p>';
-			echo '</div>';
+			if(self::$display_errors){
+				echo '<div style="border: 1px solid #FF0000; padding-left: 20px; margin: 10px 2px 10px 2px;">' . "\n";
+				echo '<p style="font-weight:bold; font-size:18px;">System Exception</p>' . "\n";
+				if($type != 0){
+					echo '<p style="font-weight:bold; font-size:16px;">' . (isset($errors[$type]) ? $errors[$type] : $type) . '</p>' . "\n";
+				}
+				if(strlen($message) > 0) echo '<p style="font-weight:normal; font-size:16px;">' . $message . '</p>' . "\n";
+				echo '</div>';
+			}
 		}
 		
 		public static function showPHPError($errno, $errstr, $errfile, $errline){
@@ -52,19 +57,23 @@
 			else if($errno == E_NOTICE) $errno = 'Notice';
 			else $errno = 'Unknown';
 			
-			echo '<div style="border: 1px solid #FF0000; padding-left: 20px; margin: 10px 2px 10px 2px;">';
-			echo '<p style="font-weight:bold; font-size:18px;">PHP Exception</p>';
-			echo '<p style="font-weight:normal; font-size:16px;">Severity: ' . $errno . '</p>';
-			echo '<p style="font-weight:normal; font-size:16px;">Message: ' . $errstr . '</p>';
-			echo '<p style="font-weight:normal; font-size:16px;">From: ' . $errfile . ':' . $errline . '</p>';
+			echo '<div style="border: 1px solid #FF0000; padding-left: 20px; margin: 10px 2px 10px 2px;">' . "\n";
+			echo '<p style="font-weight:bold; font-size:18px;">PHP Exception</p>' . "\n";
+			echo '<p style="font-weight:normal; font-size:16px;">Severity: ' . $errno . '</p>' . "\n";
+			echo '<p style="font-weight:normal; font-size:16px;">Message: ' . $errstr . '</p>' . "\n";
+			echo '<p style="font-weight:normal; font-size:16px;">From: ' . $errfile . ':' . $errline . '</p>' . "\n";
 			echo '</div>';
 		}
 	
-		public static function set_handler(){
-			/*error_reporting(0);
-			ini_set('display_errors', 0);*/
-			set_error_handler('_system_errorHandler', E_ALL);
-			register_shutdown_function('_system_shutdownFunction');
+		public static function set_handler($display_errors){
+			self::$display_errors = $display_errors;
+			if($display_errors){
+				set_error_handler('_system_errorHandler', E_ALL);
+				register_shutdown_function('_system_shutdownFunction');
+			}else{
+				error_reporting(0);
+				ini_set('display_errors', 0);
+			}
 		}
 		
 	}
