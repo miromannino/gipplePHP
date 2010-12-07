@@ -1,0 +1,90 @@
+Url routing
+======================================
+
+Principi fondamentali
+--------------------------------------
+
+Il sistema di Routing accetta URL che hanno una semplice forma di questo tipo:
+
+	http://www.example.com/myclass/myfunction/param1/param2/...
+
+l'url, grazie al modulo rewrite di apache, viene trasformata in questa forma:
+
+	http://www.example.com/index.php/myclass/myfunction/param1/param2/...
+
+index.php diventa quindi la porta di ingresso per tutte le richieste, queste vengono smistate mediante un componente chiamato router. Tale router ha l'incarico di chiamare un opportuno metodo del Controller con i parametri specificati.
+
+
+Routing
+--------------------------------------
+
+Il router è case sensitive ed accetta solamente i caratteri a-z, A-Z, 0-9, '-' e '_' in modo da ottenere url piacevoli e sicuri. Nell'esempio precedente il nome della classe sarà `Myclass`. Tale classe viene cercata nel file `'/application/controller/Classname.php'`. Successivamente, una volta istanziata questa classe viene chiamato il metodo `'myfunction'` con i relativi parametri.
+
+### Class name
+
+Una volta estratto il nome della classe la prima lettera di questo nome viene trasformata in maiuscolo poichè in generale tutte le classi hanno la prima lettera maiuscola. Come già detto viene cercata nella cartella `'/application/controller/'` una classe con il nome specificato. Nel caso ci siano classi che hanno altre lettere maiuscole oltre la prima lettera, l'url deve contenere i caratteri maiuscoli in modo opportuno. Solitamente si preferisce fare url con lettere solamente minuscole ed è per questo che c'è un modo per ottenere lettere maiuscole usando il carattere '-' che trasforma la lettera successiva in una lettera maiuscola. Ad esempio se abbiamo una classe che si chiama `'MyClass'` possiamo specificare come nome della classe `'MyClass'`,`'myClass'`,`'my-class'`, `'My-Class'` o `'-my-class'`.
+
+### Class path
+
+Nel caso tutte le classi si trovino nella cartella principale dei Controller il nome della classe è semplice, nel caso invece la cartella `controller` è strutturata in sottocartelle si possono specificare classi che stanno in queste sottocartelle usando il carattere '_' nel solito modo.
+
+	http://www.example.com/app_my-class/my-function/param1/param2/...
+
+	Si riferisce alla classe del Controller che si chiama App_MyClass contenuta nel file `'/application/controller/App/MyClass.php'`.
+
+Ricordiamo che il simbolo '_' oltre a svolgere questa funzione trasforma anche la prima lettera dopo tale simbolo in maiuscolo poichè solitamente i nomi delle classi hanno sempre la prima lettera maiuscola dopo questo simbolo (svolge quindi anche la stessa funzione del simbolo '-').
+
+### Function name
+
+Come nel caso del nome delle classi anche per i nomi delle funzioni la prima lettera dopo il simbolo '-' viene trasformata in maiuscolo.  Se abbiamo una funzione che si chiama `'getLower'` possiamo specificare come nome della funzione `'getLower'` oppure `'get-lower'`. Al contrario di come avviene per il nome delle classi il simbolo '_' non svolge nessuna funzione particolare (se ad esempio specifichiamo come nome della funzione 'mia_funzione' viene richiamata la funzione `mia_funzione`).
+
+### Function parameters
+
+I parametri delle funzioni non vengono parsati e quindi simboli come '-' non svolgono funzioni particolari. L'unica limitazione per il valore dei parametri è che siano composti da sole lettere, numeri o da caratteri '_' o '-'.
+
+### `GET` Variables
+
+Come si può notare l'uso delle variabili GET diventa implicito una volta che si passano i parametri alle funzioni ma non vogliamo escludere la possibilità di usarle comunque per esempio in caso di passaggio di parametri con simboli speciali che il router non accetta. Per specificare dei parametri GET si usa il classico carattere '?' che determina l'inizio dell'elenco di tali parametri. Tale elenco viene scartato dal router e non influenza il processo di routing.
+
+Esempio:
+
+	http://www.example.com/my-class/my-function/myparam?var=varValue
+
+Ricordiamo che nè il nome di tali parametri nè il contenuto vengono in qualche modo alterati. Ricordiamo inoltre che è sconsigliato l'uso di questo tipo di parametro poichè costringe a fare degli url brutti. Inoltre sarebbe meglio non usarli anche per motivi di sicurezza poichè alcuni simboli speciali potrebbero essere strumento di attacchi di vari tipi.
+
+### Anchors
+
+L'uso delle ancore viene anch'esso concesso e non influenza il processo di routing.
+
+Esempio:
+
+	http://www.example.com/my-class/my-function/my-param#myAnchor
+
+Anche in questo caso l'ancora passata non viene alterata in alcun modo e non influenza il processo di routing.
+
+### Index
+
+Nel caso non venga specificata un url il router non ha modo di sapere il routing da effettuare, per questo motivo si può configurare il router settando `route_index` con un url appropiata. Nel caso ad esempio viene specificato come valore 'home/index' verrà chiamata la funzione `index()` della classe `Home`.
+
+### Url Rewrite
+
+Nel caso di url particolari possiamo modificare il comportamento standard del router settando opportunamente `route_rewrite`. Tale settaggio accetta un array associativo che ha per indice un'espressione regolare e per valore un'altra espressione. L'operazione che viene fatta è semplicemente effettuare prima una `preg_match` per assicurarsi che ci sia un match della regola e poi un `preg_replace` e possono essere quindi usati tutti i valori che si usano normalmente in queste funzioni. Per capire subito facciamo un esempio esplicativo:
+
+	array(
+		'/^about$/' => 'my-info/show-about/me',
+		'/^about\/george$/' => 'my-info/show-about/george',
+		'/^article\/([0-9]+)$/' => 'my-article/show/$1',
+		
+		'/^multi-rewrite-example$/' => 'rewrite-number-1',
+		'/^rewrite-number-5$/' => 'my-class/rewrite-end',
+		'/^rewrite-number-([0-9]+)$/e' => '\'rewrite-number-\' . (\\1 + 1)'
+	)
+
+In questo esempio:
+- Se l'url è `'http://www.example.com/about'` la regola farà in modo di chiamare la funzione `showAbout('me')` della classe MyInfo.
+- Se l'url è `'http://www.example.com/about/george'` la regola farà in modo di chiamare la funzione `showAbout('george')` della classe MyInfo.
+- Se l'url è `'http://www.example.com/article/234'` la regola farà in modo di chiamare la funzione `show(234)` della classe MyArticle.
+- Se l'url è `'http://www.example.com/multi-rewrite-example'` la regola cambia l'url in `'rewrite-number-1'` poichè fa match con la quarta regola, tale url poi viene cambiata con `'rewrite-number-2'` poichè fa match con la sesta regola. Il ciclo continua fino a che si arriva all'url `'rewrite-number-5'`. In questo caso ci sono due regole che fanno match (la quinta e la sesta) ma ha priorità maggiore l'url che viene prima sulla lista e quindi viene sostituita con `'my-class/rewrite-end'` che fa in modo di chiamare la funzione `rewriteEnd()` della classe `MyClass`.
+
+Nel caso ci siano loop il router si arresta in modo predefinito alla decima volta che si tenta di riscrivere un url lanciando un'eccezione. Nel caso dell'ultimo esempio cambiando l'ordine della quinta e sesta regola si ottiene un loop e quindi un eccezione da parte del router.
+

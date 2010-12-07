@@ -49,20 +49,30 @@
 			if(!class_exists($class_name)) throw new Exception('class name: ' . $class_name, System_Error::E_ROUTER_INVALIDCONTROLLER);
 			$c = new $class_name();
 			
-			$function_name = preg_replace('/-([a-z]?)/e', 'strtoupper(\'\\1\')', $exp_route[1]);
-			
-			if(count($exp_route) == 1){
+			if(sizeof($exp_route) == 1){
+				//in case exp_route==1 the url only specify the class and the router try to call _index
+
+				//check if index exists
 				if(!is_callable(array($c, _Controller_indexMethodName))) 
 					throw new Exception('method name: ' . _Controller_indexMethodName, System_Error::E_ROUTER_CONTROLLERMETHODNOTFOUND);
+					
 				call_user_func_array(array($c, _Controller_indexMethodName), array());
 			}else{
+				//in case exp_route>1 the url specify the method name too
+				$method_name = $exp_route[1] = preg_replace('/-([a-z]?)/e', 'strtoupper(\'\\1\')', $exp_route[1]);
+				
+				//check if method exists
+				if(!is_callable(array($c, $method_name)))
+					throw new Exception('method name: ' . $method_name, System_Error::E_ROUTER_CONTROLLERMETHODNOTFOUND);
+					
+				//if filter method exists then if it return true the method is called
 				if(is_callable(array($c, _Controller_filterMethodName))){
-					$exp_route[1] = $function_name;
-					call_user_func_array(array($c, _Controller_filterMethodName), array_slice($exp_route, 1));
+					$argv = array_slice($exp_route, 2);
+					if(call_user_func_array(array($c, _Controller_filterMethodName), array($method_name, &$argv))){
+						call_user_func_array(array($c, $method_name), $argv);
+					}
 				}else{
-					if(!is_callable(array($c, $function_name)))
-						throw new Exception('method name: ' . $function_name, System_Error::E_ROUTER_CONTROLLERMETHODNOTFOUND);
-					call_user_func_array(array($c, $function_name), array_slice($exp_route, 2));
+					call_user_func_array(array($c, $method_name), array_slice($exp_route, 2));
 				}
 			}
 		}

@@ -1,0 +1,28 @@
+Examples
+======================================
+
+`"application/model/Examples/Object.php"`:
+
+	<?php
+		class Examples_Object {
+			public function __costruct(){
+				$this->db1 = System::loadDatabase('db1');
+			}
+		
+			public function insertObject($obj){
+				$this->db1->exec('insert into Object(obj) values(\'' . $obj . '\')');
+			}
+		}
+	?>
+
+
+`"application/controller/Object.php"`
+
+<?php
+	class Object {
+		function insert(){
+			$Obj = System::loadModel('Examples/Object');
+			$Obj->insertObject('dsicn');
+		}
+	}
+?>

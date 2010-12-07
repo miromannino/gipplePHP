@@ -3,7 +3,7 @@
 	/*Application system configuration--------------------------------*/
 	return array(
 		/*Routing---------------------*/
-		'route_index' => 'home/index',
+		'route_index' => 'home/hello',
 		'route_rewrite' => array(
 			'/pruno/' => 'my-class/main',
 			'/(.*)\/main/' => 'classe/pippo',

@@ -1,0 +1,109 @@
+Classes
+======================================
+
+Il framework ha in modo predefinito a disposizione delle classi che possono essere usate. Tali classi sono tutte nella cartella `'/system/lib'` e ricordiamo che hanno la precedenza sulle classi definite dall'applicazione, infatti se definissimo una classe Breanchmark mettendola in `'/application/lib'` essa non potrà mai essere istanziata poichè ogni volta che si tenta di creare la classe l'autoloader prenderà la classe contenuta in `'/system/lib/Breanchmark.php'`.
+
+
+CachePHP
+--------------------------------------
+
+A volte è necessario usare un sistema di cache per evitare di elaborare inutilmente parti che non cambiano continuamente. La libreria CachePHP è disponibile ed usabile come sempre, esiste tuttavia anche in questo caso una funzione che può aiutare.
+
+
+### System::loadCache()
+
+La funzione crea un nuovo oggetto CachePHP_Cache facendo in modo che la cartella di cache sia configurata opportunamente con la struttura delle cartelle.
+
+[TODO] link alla guida di CachePHP
+
+
+Text
+--------------------------------------
+
+La classe Text può essere usata per avere un accesso semplice a file formattati. Esistono diversi formati che possono essere usati, quello predefinito è Markdown.
+I testi sono tutti nella cartella `'/resource/text'` e all'interno di questa cartella si possono organizzare come si vuole.
+
+
+### `getText($name, $parser = 'markdown')`
+
+
+Tale funzione ritorna il testo in formato html dopo essere stato opportunamente trasformato da un parser.
+
+
+### Parser disponibili
+
+I parser si specificano nel secondo parametro della chiamata `getText`
+
+ - `markdown`: Markdown [TODO][LINK AL SITO o alla documentazione]
+ - `markdown-extra`: Markdown Extra [TODO][LINK AL SITO o alla documentazione]
+
+
+### Constructor
+
+La classe ha un costruttore che fa in modo di puntare alla cartella `'/resource/text'` in modo predefinito ma si può cambiare tale comportamento passando al costruttore un parametro che specifica un altra cartella.
+
+
+### i18n
+
+[TODO] la classe ancora non ha supporto per l'i18n
+
+
+### Examples
+
+Facciamo l'esempio di una funzione di un controller che smista l'argomento passato caricando opportunamente dei files
+
+	function text($c){
+		$t = new Text();
+		switch($c){
+			case 1:
+				echo $t->getText('doc/01-Introduction.markdown');
+			break;
+			case 2:
+				echo $t->getText('doc/02-Twig-for-Template-Designers.markdown', 'markdown-extra');
+			break;
+			case 3:
+				echo $t->getText('doc/03-Twig-for-Developers.markdown');
+			break;
+			case 4:
+				echo $t->getText('doc/04-Extending-Twig.markdown');
+			break;
+			case 5:
+				echo $t->getText('doc/05-Hacking-Twig.markdown');
+			break;
+			case 6:
+				echo $t->getText('doc/06-Recipes.markdown','markdown');
+			break;
+		}
+	
+	}
+
+
+Branchmark
+--------------------------------------
+
+Questa classe trova la sua utilità maggiormente per informazioni di debug poichè misura il tempo dell'esecuzione di uno script e il suo consumo di memoria.
+
+
+### `start()`
+
+Fa in modo che si possa iniziare il conteggio del tempo
+
+
+### `end()`
+
+Il conteggio del tempo viene stoppato
+
+
+### `getTime($decimals = 4)`
+
+Restituisce il tempo impiegato fra lo start e l'end, possono essere specificati i decimali che si vuole dare al numero.
+
+
+### `getTime_Second()`
+
+Restituisce il tempo impiegato fra lo start e l'end in secondi aggiungendo anche il simbolo 's'
+
+
+### `getMemoryUsage()`
+
+Ritorna il corrente uso di memoria, la stringa ritornata è formattata in modo da essere espressa in MB e viene infatti anche aggiunto il simbolo 'MB'

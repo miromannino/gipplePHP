@@ -1,0 +1,92 @@
+Fondamenti
+======================================
+
+Classi ed Autoloader
+--------------------------------------
+
+### Struttura
+
+Un modo ampiamente utilizzato per la strutturazione delle classi è avere una classe per ogni file che ha lo stesso nome della classe. Le classi hanno il primo carattere maiuscolo. Tutti i file che contengono classi hanno estensione '.php' e risiedono tutte in una cartella comune che solitamente viene chiamata 'lib'.
+Ad esempio una classe che si chiama `MyClass` risiede nel file `'/path/to/lib/MyClass.php'`.
+
+Nel caso si voglia una strutturazione più complessa dove ci siano sotto-cartelle le classi devono avere come nome strutturato nel seguente modo:
+
+	SubFolder1_SubFolder2_ClassName
+
+Il semplice ragionamento che sta alla base di questa strutturazione è pensare che al posto del carattere '_' ci sia '/'. Nell'esempio precedente la classe sarà contenuta nel file `'/path/to/lib/SubFolder1/SubFolder2/ClassName.php'`. Naturalmente non c'è un limite alle sotto-cartelle che si possono fare.
+
+Questa rigida struttura viene solitamente adottata nel caso ci sia un autoloader poichè quest'ultimo ha bisogno di capire il file da includere nel caso di una `new` in modo deterministico. In presenza di un autoloader infatti non c'è alcun bisogno di includere i files che contengono le classi che si vogliono usare, al momento in cui ci sia un istruzione del tipo:
+
+	$t = new My_Class('myparam1', 'myparam2', ...);
+
+L'autoloader automaticamente entra in gioco includendo il file `'/path/to/lib/My/Class.php'` che contiene la classe `My_Class` e quest'ultima viene istanziata.
+
+### Priorità
+
+In questo framework l'autoloader ha due cartelle dove sono contenute le classi e sono: `'/application/lib'` per le classi user mentre `'/system/lib'` per le classi fornite dal framework oltre alle classi di sistema. Al momento in cui entra in gioco l'autoloader esso per prima cosa cerca la classe in `'/system/lib'` e solamente se non la trova la cerca in `'/application/lib'`. Ciò lascia un'importante considerazione: se si definiscono classi che hanno lo stesso nome di classi già esistenti nella cartella di sistema esse non verranno mai viste. Per ovviare al problema basta la strutturazione in sottocartelle è la strada ideale per non preoccuparsene.
+
+
+Directory structure
+--------------------------------------
+
+/
+	index.php				entry script
+	.htaccess				configurato in modo che si occupi di una prima trasformazione dell'url
+	
+	style/					application style
+
+	resource/				in questa cartella ci sono tutti i file che l'applicazione mette a disposizione, le cartelle che mostriamo sono 						solo un esempio
+		img/				non sono le immagini per il tema corrente ma sono le immagini che si mettono a disposizione come ad esempio le 							immagini delle gallerie, ecc...	
+		text/				contenuti testuali formattati, la classe `Text` in modo predefinito prende i testi in questa cartella
+		xml/				contenuti strutturati delle pagine in formato xml, solitamente questa cartella contiene anche i files xslt per 							poterli trasformare.
+		bin/				programmi che l'utente può scaricare
+			
+	script/					cartella usata per mantanere tutti i files js
+		jquery/				contiene tutti gli script jquery
+
+	application/				parte degli script lato server dell'applicazione
+		cache/				cache per l'applicazione corrente, l'utente non ha bisogno di cambiarla
+		config/				configurazioni dell'applicazione
+			system/			configurazione del framework per l'applicazione corrente
+		controller/			cartella per il Controller
+		lib/				user classes
+		locale/				è una normale cartella gettext per l'i18n
+			it_IT/
+			en_EN/
+			...
+		model/				cartella per il Model
+		view/				cartella per il View		
+
+	system/					cartella contiene il framework, l'utente non dovrebbe cambiarne il contenuto
+		lib/				main classes, contiene anche le classi di sistema per il funzionamento del framework
+			System/			system classes
+			Twig/			Twig classes
+			Markdown		PHP Markdown classes
+			MarkdownExtra		PHP Markdown extra classes
+		config/				configurazione del framework
+
+
+Index.php e .htaccess
+--------------------------------------
+
+Index.php presenta una parte di configurazione base dell'applicazione. Queste consistono essenzialmente nel definire in che modo index.php e la root del virtual host sono in relazione. Se un sito è messo nella root allora `index.php` è in `'/index.php'` mentre se abbiamo che il sito è stato messo dentro una cartella bisogna specificare cambiando opportunamente `index.php` e `.htaccess` in modo che tutto funzioni.
+
+### Impostazioni base di `index.php`
+
+- `define('RootPath', realpath('.'));` 
+   che dice sostanzialmente che la root è la cartella corrente in cui si trova `'index.php'`. In generale comunque non è mai necessario cambiare questa costante.
+
+- `define('AppPath', RootPath . '/application');`
+   che dice in che cartella si trova la parte server del sito. In generale tale cartella si chiama sempre `application` e in tutta la guida la chiameremo in questo modo.
+
+- `define('SysPath', RootPath . '/system');`
+   che dice in che cartella si trova il framework.
+
+- `define('WebRoot', '');`
+   indica la root vista dal client. Se abbiamo che l'applicazione è nella root del nostro server `'host.it'` allora abbiamo che `WebRoot = ''` e nell'html quando scriviamo `<img href="<%=WebRoot%>/resource/img/ciao.jpg"/>` il browser del client prenderà come immagine `'http://host.it/resource/img/ciao.jpg'`.
+   Se abbiamo invece che la nostra applicazione è in una sottocartella (ad esempio in '/miosito') allora abbiamo `WebRoot = '/miosito' e di conseguenza usando lo stesso codice html visto prima il client questa volta prenderà come immagine `'http://host.it/miosito/resource/img/ciao.jpg'`
+
+
+### Impostazioni base di `.htaccess`
+
+Il file `.htaccess` va modificato di conseguenza in modo che la regola di rewrite sia fatta correttamente. In particolare ogni file `.htaccess` ha bisogno di sapere dove si trova usando il comando `RewriteBase` per riuscire a fare un url rewrite. Riprendendo gli esempi precedenti: nel caso l'applicazione sia nella root allora il `RewriteBase` è `'/'` mentre nel caso sia in '/miosito' allora il `RewriteBase` è `'/miosito'`.

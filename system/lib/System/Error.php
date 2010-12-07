@@ -61,8 +61,8 @@
 		}
 	
 		public static function set_handler(){
-			error_reporting(E_ALL);
-			ini_set('display_errors', 0);
+			/*error_reporting(0);
+			ini_set('display_errors', 0);*/
 			set_error_handler('_system_errorHandler', E_ALL);
 			register_shutdown_function('_system_shutdownFunction');
 		}

@@ -1,6 +1,6 @@
 <?php
 
-	class MyClass extends System_Controller {
+	class MyClass{
 		
 		private function privateFunction(){
 			//this function can't be called
@@ -14,7 +14,7 @@
 			echo '- tema($tema) per provare il tema<br>';
 		}
 		
-		function parametri($p1='',$p2 = '',$p3=''){
+		function parametri($p1,$p2,$p3){
 			echo "ciao $p1 $p2 $p3 <br>";
 		}
 		
@@ -70,31 +70,43 @@
 		function text($c){
 			$t = new Text();
 			switch($c){
-				case 1:
+				case 10:
 					echo $t->getText('doc/01-Introduction.markdown', 'markdown-extra');
 				break;
-				case 2:
+				case 20:
 					echo $t->getText('doc/02-Twig-for-Template-Designers.markdown', 'markdown-extra');
 				break;
-				case 3:
+				case 30:
 					echo $t->getText('doc/03-Twig-for-Developers.markdown');
 				break;
-				case 4:
+				case 40:
 					echo $t->getText('doc/04-Extending-Twig.markdown');
 				break;
-				case 5:
+				case 50:
 					echo $t->getText('doc/05-Hacking-Twig.markdown');
 				break;
-				case 6:
+				case 60:
 					echo $t->getText('doc/06-Recipes.markdown','markdown');
 				break;
 			}
 			
 		}
 		
-		/*function _filter($nomefunzione, $uno='', $due='', $tre=''){
-			echo 'si voleva chiamare la funzione: ' . $nomefunzione . ' ma è stata bloccata<br/>';
-			echo 'uno = ' . $uno . '<br/>due = ' . $due . '<br/>tre = ' . $tre;
-		}*/
+		function _filter($method, &$argv){
+			echo 'si voleva chiamare la funzione: ' . $method . ' ma è stata filtrata<br/>';
+			foreach($argv as $i) echo 'parametro: ' . $i . '<br/><br/>';
+			
+			if($method == 'text'){
+				if(sizeof($argv) == 0){
+					echo 'E\' stata chiamata la funzione text senza specificare un numero di capitolo<br/>';
+					echo 'I capitoli che si possono scegliere vanno da 1 a 6, adesso visualizzeremo il primo</br></br>';
+					$argv[0] = 10;
+				}else{
+					$argv[0] = (int)$argv[0] * 10;
+				}
+			}
+			
+			return true;
+		}
 	}
 ?>

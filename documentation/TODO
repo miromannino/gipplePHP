@@ -1,0 +1,17 @@
+ - Capire a cosa servono adesso Controller e Model che sono classi vuote ormai
+
+ - Capire se va bene la politica dell'Autoloader
+
+ - Fare altre classi di aiuto
+
+ - Fare un piccolo sito che prende in input i files di documentazione e con i relativi css li mostra, aggiornare quindi i link (guardare nel sito di php markdown e di twig per i css e come li usano)
+
+ - Capire se va bene la politica del Loader di Twig, magari fare in modo che possano essere usate sia percorsi assoluti che relativi (è possibile farli relativi?)
+
+ - i18n per il Text e fare in modo che sia facile impostarla anche per Twig (guardare documentazione twig)
+
+ - Classe di Login fare un sistema tipo PAM che fa in modo da essere indipendente dalla fonte sul quale possano venire i dati (utente e passw) e dia un metodo per capire se in sostanza un utente è ammesso o no.
+
+ - Fare uno shell script che faccia in modo di creare un nuovo progetto 
+	- impostare permessi di scrittura nella cartella di cache
+	- poter impostare la subfolder in base alla root
