@@ -4,6 +4,7 @@
 		
 		private $twig;
 		private $theme;
+		private $webRoot;
 		
 		/*Public functions -----------------------------------------*/
 		public function display($template, $variables = array()){
@@ -33,6 +34,12 @@
 				$this->theme = $app_config['default_theme'];
 			else
 				$this->theme = '';
+				
+			//web_root
+			if(isset($app_config['web_root']))
+				$this->webRoot = $app_config['web_root'];
+			else
+				$this->webRoot = '';
 			
 			//other configurations
 			$config = array();
@@ -60,7 +67,7 @@
 		
 		private function setVariables(&$variables){
 			$variables['ThemeName'] = $this->theme;
-			$variables['WebRoot'] = WebRoot;
+			$variables['WebRoot'] = $this->webRoot;
 		}
 		
 	}

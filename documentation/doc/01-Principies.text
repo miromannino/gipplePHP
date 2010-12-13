@@ -66,29 +66,9 @@ Directory structure
 		config/				configurazione del framework
 
 
-Index.php e .htaccess
+Impostazioni base di `.htaccess`
 --------------------------------------
 
-Index.php presenta una parte di configurazione base dell'applicazione. Queste consistono essenzialmente nel definire in che modo index.php e la root del virtual host sono in relazione. Se un sito è messo nella root allora `index.php` è in `'/index.php'` mentre se abbiamo che il sito è stato messo dentro una cartella bisogna specificare cambiando opportunamente `index.php` e `.htaccess` in modo che tutto funzioni.
+Se un sito è messo nella root allora `index.php` è in `'/index.php'` mentre se abbiamo che il sito è stato messo dentro una cartella bisogna specificare cambiando opportunamente il file `.htaccess` in modo che la regola di rewrite sia fatta correttamente. 
 
-### Impostazioni base di `index.php`
-
-- `define('RootPath', realpath('.'));` 
-   che dice sostanzialmente che la root è la cartella corrente in cui si trova `'index.php'`. In generale comunque non è mai necessario cambiare questa costante.
-
-- `define('AppPath', RootPath . '/application');`
-   che dice in che cartella si trova la parte server del sito. In generale tale cartella si chiama sempre `application` e in tutta la guida la chiameremo in questo modo.
-
-- `define('SysPath', RootPath . '/system');`
-   che dice in che cartella si trova il framework.
-
-- `define('WebRoot', '');`
-   indica la root vista dal client. Se abbiamo che l'applicazione è nella root del nostro server `'host.it'` allora abbiamo che `WebRoot = ''` e nell'html quando scriviamo `<img href="<%=WebRoot%>/resource/img/ciao.jpg"/>` il browser del client prenderà come immagine `'http://host.it/resource/img/ciao.jpg'`.
-   Se abbiamo invece che la nostra applicazione è in una sottocartella (ad esempio in '/miosito') allora abbiamo `WebRoot = '/miosito' e di conseguenza usando lo stesso codice html visto prima il client questa volta prenderà come immagine `'http://host.it/miosito/resource/img/ciao.jpg'`
-
-- `define('_Error_Display', false);`
-	che dice se tutti gli errori che l'applicazione può generare sono visti o meno. Nel caso di pubblicazione infatti è sempre meglio metterla a `false` poichè avere gli errori abilitati è sempre un ottimo strumento per gli attaccanti.
-
-### Impostazioni base di `.htaccess`
-
-Il file `.htaccess` va modificato di conseguenza in modo che la regola di rewrite sia fatta correttamente. In particolare ogni file `.htaccess` ha bisogno di sapere dove si trova usando il comando `RewriteBase` per riuscire a fare un url rewrite. Riprendendo gli esempi precedenti: nel caso l'applicazione sia nella root allora il `RewriteBase` è `'/'` mentre nel caso sia in '/miosito' allora il `RewriteBase` è `'/miosito'`.
+In particolare ogni file `.htaccess` ha bisogno di sapere dove si trova usando il comando `RewriteBase` per riuscire a fare un url rewrite. Nel caso l'applicazione sia nella root allora il `RewriteBase` è `'/'` mentre nel caso sia in `'/miosito'` allora il `RewriteBase` è `'/miosito'`.

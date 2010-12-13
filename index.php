@@ -1,24 +1,13 @@
 <?php
-	
-	/* General path configuration ------------------------------------*/
-	define('RootPath', realpath('.'));
-	define('AppPath', RootPath . '/application');
-	define('SysPath', RootPath . '/system');
-	define('WebRoot', ''); //Root as seen by the client. 
-							//If the root is the same of
-						  //the server root value is '' 
-	/* ---------------------------------------------------------------*/
-	
-	define('_Error_Display', true);
-	
+
+	require_once('system/config/main.php');
+
 	//Performance Test
 	/*
 	require_once(SysPath . '/lib/Benchmark.php');
 	$b_time = new Benchmark();
 	$b_time->start();
 	*/
-	
-	require_once(SysPath . '/config/main.php');
 	
 	try{
 		System_Router::execute();

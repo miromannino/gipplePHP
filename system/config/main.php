@@ -1,5 +1,10 @@
 <?php
 	
+	/* Path -------------------------------------------*/
+	define('RootPath', realpath('.'));
+	define('AppPath', RootPath . '/application');
+	define('SysPath', RootPath . '/system');
+	
 	/* Extra ------------------------------------------*/
 	define('_Ext', '.php'); //php file extensions
 	define('_Template_Ext', '.html'); //template file extensions
@@ -39,5 +44,5 @@
 	//System::_init();
 	
 	/* Errors -----------------*/
-	System_Error::set_handler(_Error_Display);
+	System_Error::set_handler();
 ?>

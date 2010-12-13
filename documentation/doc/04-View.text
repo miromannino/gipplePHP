@@ -62,14 +62,14 @@ Help Variables
 --------------------------------------
 
 I metodi citati aggiungono sempre delle variabili all'array passato come parametro aggiungendo 'ThemeName' e 'WebRoot', anche se non è stato passato alcun array.
-'ThemeName' è una variabile che contiene il tema corrente mentre 'WebRoot' da indicazioni sulla root del sito vista dal client. 
+'ThemeName' è una variabile che contiene il tema corrente mentre 'WebRoot' da indicazioni sulla root del sito vista dal client. Entrambi i parametri sono configurabili dal file di configurazione principale dell'applicazione `'/application/config/system/main.php'` configurando i valori `default_theme` e `web_root`.
 
 ### WebRoot
 
-Ricordiamo brevemente che la WebRoot indica la root vista dal client. Se abbiamo che l'applicazione è nella root del nostro server `'host.it'` allora abbiamo che `WebRoot = ''` e nell'html quando scriviamo `<img href="<%=WebRoot%>/resource/img/ciao.jpg"/>` il browser del client prenderà come immagine `'http://host.it/resource/img/ciao.jpg'`.
-   Se abbiamo invece che la nostra applicazione è in una sottocartella (ad esempio in '/miosito') allora abbiamo `WebRoot = '/miosito' e di conseguenza usando lo stesso codice html visto prima il client questa volta prenderà come immagine `'http://host.it/miosito/resource/img/ciao.jpg'`
+La WebRoot indica la root vista dal client. Se abbiamo che l'applicazione è nella root del nostro server `'host.it'` allora imposteremo che `WebRoot = ''` e nell'html quando scriviamo `<img href="<%=WebRoot%>/resource/img/ciao.jpg"/>` il browser del client prenderà come immagine `'http://host.it/resource/img/ciao.jpg'`.
+   Se abbiamo invece che la nostra applicazione è in una sottocartella (ad esempio in `'/miosito'`) allora abbiamo `WebRoot = '/miosito'` e di conseguenza usando lo stesso codice html visto prima il client questa volta prenderà come immagine `'http://host.it/miosito/resource/img/ciao.jpg'`
 
-Se per qualcuno scrivere prima di ogni path tale variabile può sembrare inutile poichè pensa che il sito si troverà sempre nella root di un host è libero di non usarla del tutto.
+Se qualcuno pensa che l'applicazione si troverà sempre nella root di un host è libero di non usare questa variabile nei templates. Se nella configurazione non viene settato `web_root` la WebRoot viene impostata in modo predefinito a ''.
 
 ### ThemeName
 

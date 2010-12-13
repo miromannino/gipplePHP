@@ -15,6 +15,9 @@
 			'/^rewrite-number-([0-9])$/e' => '\'rewrite-number-\' . (\\1 + 1)',
 		),
 		
+		'web_root' => '', //Root as seen by the client. If the root is the same of the server root value is ''
+		'display_errors' => true, 
+		
 		/*Themes---------------------*/
 		'default_theme' => 'default'
 	);

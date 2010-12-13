@@ -65,9 +65,10 @@
 			echo '</div>';
 		}
 	
-		public static function set_handler($display_errors){
-			self::$display_errors = $display_errors;
-			if($display_errors){
+		public static function set_handler(){
+			$app_config = System_Configuration::getAppConfig('main');
+			self::$display_errors = isset($app_config['display_errors']) ? $app_config['display_errors'] : true;
+			if(self::$display_errors){
 				set_error_handler('_system_errorHandler', E_ALL);
 				register_shutdown_function('_system_shutdownFunction');
 			}else{
