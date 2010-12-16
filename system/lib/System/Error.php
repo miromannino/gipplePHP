@@ -26,6 +26,7 @@
 		const E_MODEL_INVALIDMODEL = 102;
 		const E_DATABASE_NOTFOUND = 150;
 		const E_DATABASE_WRONGCONFIG = 151;
+		const E_MAIN_FOLDERNOTWRITABLE = 200;
 		
 		private static $display_errors;
 		

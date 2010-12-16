@@ -47,6 +47,9 @@
 				$config['cache'] = AppPath . '/cache/twig';
 				$config['auto_reload'] = true;
 				$config['strict_variables'] = true;
+				if(!is_writable($config['cache'])){
+					throw new Exception('path: ' . $config['cache'], System_Error::E_MAIN_FOLDERNOTWRITABLE);
+				}
 			}
 			
 			//creating twig object

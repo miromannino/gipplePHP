@@ -40,9 +40,12 @@
 	require_once(SysPath . '/lib/System' . _Ext);
 	System_Autoloader::register();
 	
-	/*System ------------------*/
-	//System::_init();
-	
 	/* Errors -----------------*/
 	System_Error::set_handler();
+	
+	/* Cache folder -----------------------------------*/
+	if(!is_writable(AppPath . '/cache')){
+		System_Error::showSystemError('path: ' . AppPath . '/cache', System_Error::E_MAIN_FOLDERNOTWRITABLE);
+		exit();
+	}
 ?>

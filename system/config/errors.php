@@ -12,6 +12,7 @@
 	const E_MODEL_INVALIDMODEL = 102;
 	const E_DATABASE_NOTFOUND = 150;
 	const E_DATABASE_WRONGCONFIG = 151;
+	const E_MAIN_FOLDERNOTWRITABLE = 200;
 	*/
 	
 	return array(
@@ -26,6 +27,7 @@
 		101 => 'Model not found',
 		102 => 'Invalid Model',
 		150 => 'Database not found',
-		152 => 'Wrong database configuration'
+		152 => 'Wrong database configuration',
+		200 => 'Folder is not writable'
 	);
 ?>
