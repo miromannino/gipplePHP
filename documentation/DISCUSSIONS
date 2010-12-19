@@ -1,0 +1,17 @@
+========================= Discussion Board =============================
+
+Let's use this file as a discussion board, for questions and answers 
+about the documentation and the framework in general.
+
+========================================================================
+	§ Più siti sotto lo stesso framework?
+	by Matteo
+========================================================================
+Ho capito il punto in cui dici che bisogna configurare .htaccess se 
+metti il sito dentro una sottocartella di root, ma c'è anche un modo 
+per avere più di un sito sotto la stessa root? Tipo /miosito1 e 
+/miosito2, entrambi funzionanti sotto questo framework?
+------------------------------------------------------------------------
+answer by <yourname>
+------------------------------------------------------------------------
+Your answer...
