@@ -19,8 +19,7 @@
 		const E_ROUTER_MAXLOOPCOUNTEXCEED = 3;
 		const E_ROUTER_INVALIDURL = 4;
 		const E_ROUTER_CONTROLLERMETHODNOTFOUND = 5;
-		const E_CONFIG_APPCONFIGNOTFOUND = 50;
-		const E_CONFIG_SYSCONFIGNOTFOUND = 51;
+		const E_CONFIG_SYSCONFIGNOTFOUND = 50;
 		const E_MODEL_INVALIDNAME = 100;
 		const E_MODEL_NOTFOUND = 101;
 		const E_MODEL_INVALIDMODEL = 102;
@@ -31,7 +30,8 @@
 		private static $display_errors;
 		
 		public static function showSystemError($message, $type){
-			$errors = include(SysPath . '/config/errors' . _Ext);
+			//this don't use Configuration::get for not generate other errors
+			$errors = include(SysPath . '/config/system/errors' . _Ext);
 			
 			if($type > 0 && $type < 50){
 				//is a router error
@@ -67,7 +67,7 @@
 		}
 	
 		public static function set_handler(){
-			$app_config = System_Configuration::getAppConfig('main');
+			$app_config = System_Configuration::get('application');
 			self::$display_errors = isset($app_config['display_errors']) ? $app_config['display_errors'] : true;
 			if(self::$display_errors){
 				set_error_handler('_system_errorHandler', E_ALL);

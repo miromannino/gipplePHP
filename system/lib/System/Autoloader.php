@@ -9,12 +9,7 @@
 
 		static public function autoload($class){
 			$file = SysPath . '/lib/' . str_replace('_', '/', $class) . _Ext;
-			if(file_exists($file)){
-				include_once($file);
-			}else{
-				$file = AppPath . '/lib/' . str_replace('_', '/', $class) . _Ext;
-				if(file_exists($file)) include_once($file);
-			}
+			if(file_exists($file)) include_once($file);
 		}
 		
 	}

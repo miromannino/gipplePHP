@@ -36,7 +36,7 @@
 		}
 		
 		function oggetto(){
-			$Ogetto = $this->loadModel('Prova/Oggetto');
+			$Ogetto = System_Load::Model('Prova/Oggetto');
 			//$Ogetto->insertOggetto('dsicn');
 		}
 		

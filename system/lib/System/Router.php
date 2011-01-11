@@ -12,7 +12,6 @@
 			$needRep = true;
 			$loopCount = _Router_LoopMax;
 			
-			
 			while($loopCount > 0 && $needRep == true){
 				$needRep = false;
 				$route = trim($route, '/');
@@ -78,7 +77,7 @@
 		}
 		
 		private static function init(){
-			$app_config = System_Configuration::getAppConfig('main');
+			$app_config = System_Configuration::get('application');
 			
 			if(isset($app_config['route_rewrite'])) 
 				self::$route_rewrite = $app_config['route_rewrite'];

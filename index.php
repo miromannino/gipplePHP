@@ -1,6 +1,6 @@
 <?php
 
-	require_once('system/config/main.php');
+	require_once('system/config/system/main.php');
 
 	//Performance Test
 	/*

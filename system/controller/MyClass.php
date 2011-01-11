@@ -36,7 +36,7 @@
 		}
 		
 		function oggetto(){
-			$Oggetto = System::loadModel('Prova/Oggetto');
+			$Oggetto = System_Load::Model('Prova/Oggetto');
 			$Oggetto->insertOggetto('dsicn');
 		}
 		
@@ -45,7 +45,7 @@
 		}
 		
 		function cache(){
-			$cache = System::loadCache();
+			$cache = System_Load::Cache();
 			$cache->setKey('provacache');
 			$cache->setDeadLine(5);
 			if($cache->printOrBegin()){
@@ -56,7 +56,7 @@
 		}
 		
 		function tema($tema = 'default'){
-			$view = System::loadView();
+			$view = System_Load::View();
 			$view->setTheme($tema);
 			$view->display('home', array('message' => 'ciao'));
 			

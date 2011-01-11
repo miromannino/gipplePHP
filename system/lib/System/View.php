@@ -30,8 +30,8 @@
 		
 		public function __construct(){
 			//loading configurations
-			$app_config = System_Configuration::getAppConfig('main');
-			$twig_config = System_Configuration::getSysConfig('twig');
+			$app_config = System_Configuration::get('application');
+			$twig_config = System_Configuration::get('twig');
 			
 			//set default theme
 			if(isset($app_config['default_theme']))
@@ -48,7 +48,7 @@
 			//other configurations
 			$config = array();
 			if($twig_config['cache']){
-				$config['cache'] = AppPath . '/cache/twig';
+				$config['cache'] = SysPath . '/cache/twig';
 				$config['auto_reload'] = true;
 				$config['strict_variables'] = true;
 				if(!is_writable($config['cache'])){

@@ -1,9 +1,9 @@
 <?php
 	
-	class System {
+	class System_Load {
 		
-		public static function loadModel($model){
-			$app_config = System_Configuration::getAppConfig('main');
+		public static function Model($model){
+			$app_config = System_Configuration::get('application');
 			
 			//path control
 			$model = preg_replace(array('@^/+@','@/+$@','@/{2,}@'), array('','','/'), $model);
@@ -21,8 +21,8 @@
 			return new $class_name();
 		}
 		
-		public static function loadDatabase($db_name){
-			$db_config = System_Configuration::getAppConfig('database');
+		public static function Database($db_name){
+			$db_config = System_Configuration::get('database');
 			
 			//check if configuration exist
 			if(!isset($db_config[$db_name])) throw new Exception('db name: ' . $db_name, System_Error::E_DATABASE_NOTFOUND);
@@ -46,11 +46,11 @@
 			}
 		}
 		
-		public static function loadCache(){
+		public static function Cache(){
 			return new CachePHP_Cache(AppPath . '/cache');
 		}
 		
-		public static function loadView(){
+		public static function View(){
 			return new System_View();
 		}
 		
