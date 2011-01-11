@@ -1,9 +1,6 @@
 <?php
 	
-	class System_Model {
+	abstract class System_Model {
 		
-		function __construct(){
-		}
-				
 	}
 ?>

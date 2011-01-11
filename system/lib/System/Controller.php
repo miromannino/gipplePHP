@@ -1,8 +1,6 @@
 <?php
 
-	class System_Controller {
+	abstract class System_Controller {
 		
-		function __construct(){
-		}
 	}
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-	class MyClass{
+	class MyClass extends System_Controller {
 		
 		private function privateFunction(){
 			//this function can't be called
@@ -71,22 +71,22 @@
 			$t = new Text();
 			switch($c){
 				case 10:
-					echo $t->getText('doc/01-Introduction.markdown', 'markdown-extra');
+					echo $t->get('doc/01-Introduction.markdown', 'markdown-extra');
 				break;
 				case 20:
-					echo $t->getText('doc/02-Twig-for-Template-Designers.markdown', 'markdown-extra');
+					$t->show('doc/02-Twig-for-Template-Designers.markdown', 'markdown-extra');
 				break;
 				case 30:
-					echo $t->getText('doc/03-Twig-for-Developers.markdown');
+					echo $t->get('doc/03-Twig-for-Developers.markdown');
 				break;
 				case 40:
-					echo $t->getText('doc/04-Extending-Twig.markdown');
+					$t->show('doc/04-Extending-Twig.markdown');
 				break;
 				case 50:
-					echo $t->getText('doc/05-Hacking-Twig.markdown');
+					echo $t->get('doc/05-Hacking-Twig.markdown');
 				break;
 				case 60:
-					echo $t->getText('doc/06-Recipes.markdown','markdown');
+					echo $t->get('doc/06-Recipes.markdown','markdown');
 				break;
 			}
 			

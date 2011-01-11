@@ -10,7 +10,7 @@
 			if(!file_exists($this->base)) throw new Exception('Text: text folder not exists');
 		}
 		
-		public function getText($name, $type = 'markdown'){
+		public function get($name, $type = 'markdown'){
 			if($type === 'markdown'){
 				$t = System::loadCache();
 				$t->setKey('text/markdown/' . $name);
@@ -36,5 +36,8 @@
 			}
 		}
 		
+		public function show($name, $type = 'markdown'){
+			echo $this->get($name, $type);
+		}
 	}
 ?>

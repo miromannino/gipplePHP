@@ -22,6 +22,10 @@
 		public function setTheme($name){
 			$this->theme = $name;
 		}
+		
+		public function getTheme(){
+			return $this->theme;
+		}
 		/*------------------------------------------------------------*/
 		
 		public function __construct(){

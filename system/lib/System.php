@@ -7,8 +7,8 @@
 			
 			//path control
 			$model = preg_replace(array('@^/+@','@/+$@','@/{2,}@'), array('','','/'), $model);
-			if(!preg_match('/^([a-zA-Z0-9]\/?)+$/', $model)) throw new Exception('', System_Error::E_MODEL_INVALIDNAME);
-
+			if(!preg_match('/^([a-zA-Z0-9]+)(\/[a-zA-Z0-9]+)*$/', $model)) throw new Exception('' , System_Error::E_MODEL_INVALIDNAME);
+			
 			//path and class compose
 			$path = _Path_Model . '/' . $model . _Ext;
 			$class_name = str_replace('/', '_', $model);
