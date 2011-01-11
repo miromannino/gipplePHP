@@ -2,7 +2,7 @@
 
 	class System_View {
 		
-		private $twig;
+		public $twig;
 		private $theme;
 		private $webRoot;
 		

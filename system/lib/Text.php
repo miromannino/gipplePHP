@@ -12,7 +12,7 @@
 		
 		public function get($name, $type = 'markdown'){
 			if($type === 'markdown'){
-				$t = System::loadCache();
+				$t = System_Load::Cache();
 				$t->setKey('text/markdown/' . $name);
 				$t->addDependance($this->base . '/' . $name);
 				if(!$t->get($txt)){
@@ -22,7 +22,7 @@
 				}
 				return $txt;
 			}else if($type === 'markdown-extra'){
-				$t = System::loadCache();
+				$t = System_Load::Cache();
 				$t->setKey('text/markdown-extra/' . $name);
 				$t->addDependance($this->base . '/' . $name);
 				if(!$t->get($txt)){

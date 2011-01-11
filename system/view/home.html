@@ -1,16 +1,17 @@
 <% extends "layout/" ~ ThemeName ~ "/main.html" %>
 
 <% block css %>
-			<% parent %>
+			<%= parent() %>
 			<link href="<%=WebRoot%>/style/css/home.css" rel="stylesheet" type="text/css" />
 <% endblock %>
 
 <% block script %>
-		<% parent %>
+		<%= parent() %>
 <% endblock %>
 
 <% block header %>
 			header
+			<%= text.get('doc/04-Extending-Twig.markdown') %>
 <% endblock %>
 
 <% block content %>

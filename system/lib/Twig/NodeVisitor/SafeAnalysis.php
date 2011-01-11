@@ -2,21 +2,36 @@
 
 class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 {
-    protected $data;
-
-    public function __construct()
-    {
-        $this->data = new SplObjectStorage();
-    }
+    protected $data = array();
 
     public function getSafe(Twig_NodeInterface $node)
     {
-        return isset($this->data[$node]) ? $this->data[$node] : null;
+        $hash = spl_object_hash($node);
+        if (isset($this->data[$hash])) {
+            foreach($this->data[$hash] as $bucket) {
+                if ($bucket['key'] === $node) {
+                    return $bucket['value'];
+                }
+            }
+        }
+        return null;
     }
 
     protected function setSafe(Twig_NodeInterface $node, array $safe)
     {
-        $this->data[$node] = $safe;
+        $hash = spl_object_hash($node);
+        if (isset($this->data[$hash])) {
+            foreach($this->data[$hash] as &$bucket) {
+                if ($bucket['key'] === $node) {
+                    $bucket['value'] = $safe;
+                    return;
+                }
+            }
+        }
+        $this->data[$hash][] = array(
+            'key' => $node,
+            'value' => $safe,
+        );
     }
 
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
@@ -34,14 +49,21 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             $safe = $this->intersectSafe($this->getSafe($node->getNode('expr2')), $this->getSafe($node->getNode('expr3')));
             $this->setSafe($node, $safe);
         } elseif ($node instanceof Twig_Node_Expression_Filter) {
-            // filter expression is safe when the last filter is safe
-            $filterMap = $env->getFilters();
-            $filters = $node->getNode('filters');
-            $i = count($filters) - 2;
-            $name = $filters->getNode($i)->getAttribute('value');
-            $args = $filters->getNode($i+1);
-            if (isset($filterMap[$name])) {
-                $this->setSafe($node, $filterMap[$name]->getSafe($args));
+            // filter expression is safe when the filter is safe
+            $name = $node->getNode('filter')->getAttribute('value');
+            $args = $node->getNode('arguments');
+            if (false !== $filter = $env->getFilter($name)) {
+                $this->setSafe($node, $filter->getSafe($args));
+            } else {
+                $this->setSafe($node, array());
+            }
+        } elseif ($node instanceof Twig_Node_Expression_Function) {
+            // function expression is safe when the function is safe
+            $name = $node->getNode('name')->getAttribute('name');
+            $args = $node->getNode('arguments');
+            $function = $env->getFunction($name);
+            if (false !== $function) {
+                $this->setSafe($node, $function->getSafe($args));
             } else {
                 $this->setSafe($node, array());
             }
@@ -67,5 +89,13 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
         }
 
         return array_intersect($a, $b);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority()
+    {
+        return 0;
     }
 }
