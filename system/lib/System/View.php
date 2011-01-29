@@ -60,16 +60,22 @@
 			$loader = new Twig_Loader_Filesystem(_Path_View);
 			$this->twig = new Twig_Environment($loader, $config);
 			
-			//loading extensions
+			//configuring extensions
 			if($twig_config['i18n_extension'])
 				$this->twig->addExtension(new Twig_Extension_I18n());
 				
 			if($twig_config['escaper_extension'])
 				$this->twig->addExtension(new Twig_Extension_Escaper(true));
 				
+			//configuring helpers
+			if($twig_config['text_helper'])
+				$this->twig->addFunction('text', new Twig_Function_Function('System_TwigHelpers_Text::text', array('is_safe' => array('html'))));
+				
 			//configuring syntax
 			$lexer = new Twig_Lexer($this->twig, $twig_config['syntax']);
 			$this->twig->setLexer($lexer);
+			
+			
 		}
 		
 		private function setVariables(&$variables){

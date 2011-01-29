@@ -9,8 +9,10 @@
 		'syntax' => array(
 			'tag_comment' => array('<%#', '%>'),
 			'tag_block' => array('<%', '%>'),
-			'tag_variable' => array('<%=', '%>'),
-		)
+			'tag_variable' => array('<%=', '%>')
+		),
+		
+		'text_helper' => true
 		
 	);
 	

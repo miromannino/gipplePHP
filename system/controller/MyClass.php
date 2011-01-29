@@ -55,17 +55,24 @@
 			
 		}
 		
+		function textintemplate(){
+			$view = System_Load::View();
+			$view->display('text', array('message' => 'ciao'));
+		}
+		
 		function tema($tema = 'default'){
 			$view = System_Load::View();
 			$view->setTheme($tema);
 			$view->display('home', array('message' => 'ciao'));
-			
 		}
+
 
 		function principles(){
 			$t = new Text();
 			echo $t->getText('principles.text');
 		}
+
+
 		
 		function text($c){
 			$t = new Text();
@@ -109,4 +116,5 @@
 			return true;
 		}
 	}
+	
 ?>
