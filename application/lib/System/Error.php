@@ -31,7 +31,7 @@
 		
 		public static function showSystemError($message, $type){
 			//this don't use Configuration::get for not generate other errors
-			$errors = include(SysPath . '/config/system/errors' . _Ext);
+			$errors = include(AppPath . '/config/system/errors' . _Ext);
 			
 			if($type > 0 && $type < 50){
 				//is a router error

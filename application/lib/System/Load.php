@@ -47,7 +47,7 @@
 		}
 		
 		public static function Cache(){
-			return new CachePHP_Cache(SysPath . '/cache');
+			return new CachePHP_Cache(AppPath . '/cache');
 		}
 		
 		public static function View(){

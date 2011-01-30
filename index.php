@@ -1,10 +1,10 @@
 <?php
 
-	require_once('system/config/system/main.php');
+	require_once('application/config/system/main.php');
 
 	//Performance Test
 	/*
-	require_once(SysPath . '/lib/Benchmark.php');
+	require_once(AppPath . '/lib/Benchmark.php');
 	$b_time = new Benchmark();
 	$b_time->start();
 	*/

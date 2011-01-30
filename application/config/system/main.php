@@ -2,7 +2,7 @@
 	
 	/* Path -------------------------------------------*/
 	define('RootPath', realpath('.'));
-	define('SysPath', RootPath . '/system');
+	define('AppPath', RootPath . '/application');
 	
 	/* Extra ------------------------------------------*/
 	define('_Ext', '.php'); //php file extensions
@@ -24,20 +24,20 @@
 	define('_Model_DB_Config_opt', 'pdo_option');
 	
 	/* MVC ------------------------------------------- */
-	define('_Path_Controller', SysPath . '/controller');
-	define('_Path_Model', SysPath . '/model');
-	define('_Path_View', SysPath . '/view');
+	define('_Path_Controller', AppPath . '/controller');
+	define('_Path_Model', AppPath . '/model');
+	define('_Path_View', AppPath . '/view');
 	
 	/* Autoloader -------------------------------------*/
-	require_once(SysPath . '/lib/System/Autoloader' . _Ext);
+	require_once(AppPath . '/lib/System/Autoloader' . _Ext);
 	System_Autoloader::register();
 	
 	/* Errors -----------------*/
 	System_Error::set_handler();
 	
 	/* Cache folder -----------------------------------*/
-	if(!is_writable(SysPath . '/cache')){
-		System_Error::showSystemError('path: ' . SysPath . '/cache', System_Error::E_MAIN_FOLDERNOTWRITABLE);
+	if(!is_writable(AppPath . '/cache')){
+		System_Error::showSystemError('path: ' . AppPath . '/cache', System_Error::E_MAIN_FOLDERNOTWRITABLE);
 		exit();
 	}
 ?>

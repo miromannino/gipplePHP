@@ -48,7 +48,7 @@
 			//other configurations
 			$config = array();
 			if($twig_config['cache']){
-				$config['cache'] = SysPath . '/cache/twig';
+				$config['cache'] = AppPath . '/cache/twig';
 				$config['auto_reload'] = true;
 				$config['strict_variables'] = true;
 				if(!is_writable($config['cache'])){
