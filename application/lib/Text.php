@@ -1,12 +1,18 @@
 <?php
 	class Text {
 		
+		private $base;
+		private $cache;
+		
 		public function __construct($base = ''){
 			if (strlen($base) == 0){
 				$this->base = RootPath . '/resource/text';
 			}else{
 				$this->base = $base;
 			}
+			
+			$this->cache = System_Load::Cache();
+			
 			if(!file_exists($this->base)) throw new Exception('Text: text folder not exists');
 		}
 		
@@ -17,23 +23,21 @@
 			if($cont === FALSE) throw new Exception('Text: file not found');
 						
 			if($type === 'markdown'){
-				$t = System_Load::Cache();
-				$t->setKey('text/markdown/' . $name);
-				$t->addDependance($this->base . '/' . $name);
-				if(!$t->get($txt)){
+				$this->cache->setKey('text/markdown/' . $name);
+				$this->cache->setDependance($this->base . '/' . $name);
+				if(!$this->cache->get($txt)){
 					$mp = new Markdown_Parser();
 					$txt = $mp->transform($cont);
-					$t->put($txt);
+					$this->cache->put($txt);
 				}
 				return $txt;
 			}else if($type === 'markdown-extra'){
-				$t = System_Load::Cache();
-				$t->setKey('text/markdown-extra/' . $name);
-				$t->addDependance($this->base . '/' . $name);
-				if(!$t->get($txt)){
+				$this->cache->setKey('text/markdown-extra/' . $name);
+				$this->cache->setDependance($this->base . '/' . $name);
+				if(!$this->cache->get($txt)){
 					$mp = new MarkdownExtra_Parser();
 					$txt = $mp->transform($cont);
-					$t->put($txt);
+					$this->cache->put($txt);
 				}
 				return $txt;
 			}else{
@@ -46,3 +50,4 @@
 		}
 	}
 ?>
+

@@ -11,6 +11,7 @@
 	
 	function ciccio($route){
 		if ($route == 'ciaosonomiro') return 'my-class/textintemplate';
+		else return $route;
 	}
 	
 	try{
