@@ -9,7 +9,12 @@
 	$b_time->start();
 	*/
 	
+	function ciccio($route){
+		if ($route == 'ciaosonomiro') return 'my-class/textintemplate';
+	}
+	
 	try{
+		System_Router::setUsrRewriteFunction('ciccio');
 		System_Router::execute();
 	}catch(Exception $ex){
 		System_Error::showSystemError($ex->getMessage(), $ex->getCode());

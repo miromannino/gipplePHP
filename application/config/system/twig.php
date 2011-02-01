@@ -12,7 +12,7 @@
 			'tag_variable' => array('<%=', '%>')
 		),
 		
-		'text_helper' => true
+		'helpers' => true
 		
 	);
 	

@@ -11,13 +11,18 @@
 		}
 		
 		public function get($name, $type = 'markdown'){
+			$filepath = $this->base . '/' . $name;
+			if(!file_exists($filepath)) throw new Exception('Text: file not found');
+			$cont = file_get_contents($filepath);
+			if($cont === FALSE) throw new Exception('Text: file not found');
+						
 			if($type === 'markdown'){
 				$t = System_Load::Cache();
 				$t->setKey('text/markdown/' . $name);
 				$t->addDependance($this->base . '/' . $name);
 				if(!$t->get($txt)){
 					$mp = new Markdown_Parser();
-					$txt = $mp->transform(file_get_contents($this->base . '/' . $name));
+					$txt = $mp->transform($cont);
 					$t->put($txt);
 				}
 				return $txt;
@@ -27,7 +32,7 @@
 				$t->addDependance($this->base . '/' . $name);
 				if(!$t->get($txt)){
 					$mp = new MarkdownExtra_Parser();
-					$txt = $mp->transform(file_get_contents($this->base . '/' . $name));
+					$txt = $mp->transform($cont);
 					$t->put($txt);
 				}
 				return $txt;

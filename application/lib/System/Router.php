@@ -5,17 +5,18 @@
 		//The name of the get variable
 		private static $route_rewrite;
 		private static $route_index;
+		private static $usr_rewrite_function;
 		
 		public static function execute(){
 			self::init();
 			$route = self::getRoute();
+			
+			//Basic URL Rewrite
 			$needRep = true;
 			$loopCount = _Router_LoopMax;
-			
 			while($loopCount > 0 && $needRep == true){
 				$needRep = false;
 				$route = trim($route, '/');
-				//echo 'route: ' . $route . '<br>';
 				
 				if (strlen($route) == 0){
 					//Index url in case of empty url
@@ -31,11 +32,19 @@
 						}
 					}
 				}
-				
 				$loopCount--;
 			}
 			
 			if($loopCount <= 0) throw new Exception('' , System_Error::E_ROUTER_MAXLOOPCOUNTEXCEED);
+		
+			//User Defined URL Rewrite
+			if(isset(self::$usr_rewrite_function)){
+				$route = call_user_func_array(self::$usr_rewrite_function, array($route));
+							
+				//Index url in case of empty url after the user defined url rewrite
+				if (strlen($route) == 0) $route = self::$route_index;
+			}
+				
 			if(!preg_match('/^([a-zA-Z0-9_-]+)(\/[a-zA-Z0-9_-]+)*$/', $route)) throw new Exception('' , System_Error::E_ROUTER_INVALIDURL);
 			$exp_route = explode('/', $route);
 			
@@ -74,6 +83,10 @@
 					call_user_func_array(array($c, $method_name), array_slice($exp_route, 2));
 				}
 			}
+		}
+		
+		public static function setUsrRewriteFunction($func){
+			self::$usr_rewrite_function = $func;			
 		}
 		
 		private static function init(){

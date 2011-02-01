@@ -57,13 +57,14 @@
 		
 		function textintemplate(){
 			$view = System_Load::View();
-			$view->display('text', array('message' => 'ciao'));
+			$view->display('text');
 		}
 		
 		function tema($tema = 'default'){
 			$view = System_Load::View();
 			$view->setTheme($tema);
 			$view->display('home', array('message' => 'ciao'));
+			$view->display('home', array('message' => 'ciao2'));
 		}
 
 
