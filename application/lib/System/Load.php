@@ -2,25 +2,6 @@
 	
 	class System_Load {
 		
-		public static function Model($model){
-			$app_config = System_Configuration::get('application');
-			
-			//path control
-			$model = preg_replace(array('@^/+@','@/+$@','@/{2,}@'), array('','','/'), $model);
-			if(!preg_match('/^([a-zA-Z0-9]+)(\/[a-zA-Z0-9]+)*$/', $model)) throw new Exception('' , System_Error::E_MODEL_INVALIDNAME);
-			
-			//path and class compose
-			$path = _Path_Model . '/' . $model . _Ext;
-			$class_name = str_replace('/', '_', $model);
-
-			//existance control and inclusion
-			if(file_exists($path)) include_once($path);
-			else throw new Exception('model path: ' . $path, System_Error::E_MODEL_NOTFOUND);
-			if(!class_exists($class_name)) throw new Exception('model class name: ' . $class_name, System_Error::E_MODEL_INVALIDMODEL);
-
-			return new $class_name();
-		}
-		
 		public static function Database($db_name){
 			$db_config = System_Configuration::get('database');
 			

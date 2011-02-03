@@ -51,6 +51,7 @@
 			$class_name = ucfirst($exp_route[0]);
 			$class_name = preg_replace(array('/-([a-z]?)/e', '/_([a-z]?)/e'), array('strtoupper(\'\\1\')', 'strtoupper(\'_\\1\')'), $class_name);
 			$class_path = _Path_Controller . '/' . str_replace('_', '/', $class_name) . _Ext;
+			$class_name = 'Controller_' . $class_name;
 			
 			if(!file_exists($class_path)) throw new Exception('path: ' . $class_path, System_Error::E_ROUTER_CONTROLLERNOTFOUND);
 			include_once($class_path);

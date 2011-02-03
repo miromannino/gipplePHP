@@ -49,11 +49,13 @@
 			if($twig_config['cache']){
 				$config['cache'] = AppPath . '/cache/twig';
 				$config['auto_reload'] = true;
-				$config['strict_variables'] = true;
 				if(!is_writable($config['cache'])){
 					throw new Exception('path: ' . $config['cache'], System_Error::E_MAIN_FOLDERNOTWRITABLE);
 				}
 			}
+			
+			$config['strict_variables'] = true;
+			$config['autoescape'] = $twig_config['autoescape'];
 			
 			//creating twig object
 			$loader = new Twig_Loader_Filesystem(_Path_View);

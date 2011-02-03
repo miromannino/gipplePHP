@@ -8,7 +8,16 @@
 		}
 
 		static public function autoload($class){
-			$file = AppPath . '/lib/' . str_replace('_', '/', $class) . _Ext;
+			if (strpos($class, 'Controller_') === 0){
+				$class_name = substr($class, 11);
+				$file = AppPath . '/controller/' . str_replace('_', '/', $class_name) . _Ext;
+            }else if (strpos($class, 'Model_') === 0){
+				$class_name = substr($class, 6);
+				$file = AppPath . '/model/' . str_replace('_', '/', $class_name) . _Ext;
+			}else{
+				$file = AppPath . '/lib/' . str_replace('_', '/', $class) . _Ext;
+			}
+			
 			if(file_exists($file)) include_once($file);
 		}
 		

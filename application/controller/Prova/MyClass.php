@@ -1,6 +1,6 @@
 <?php
 
-	class Prova_MyClass extends System_Controller {
+	class Controller_Prova_MyClass {
 		
 		private function privateFunction(){
 			//this function can't be called
@@ -14,7 +14,7 @@
 			echo '- tema($tema) per provare il tema<br>';
 		}
 		
-		function parametri($p1='',$p2 = '',$p3=''){
+		function parametri($p1,$p2,$p3){
 			echo "ciao $p1 $p2 $p3 <br>";
 		}
 		
@@ -36,43 +36,86 @@
 		}
 		
 		function oggetto(){
-			$Ogetto = System_Load::Model('Prova/Oggetto');
-			//$Ogetto->insertOggetto('dsicn');
+			$Oggetto = new Model_Prova_Oggetto();
+			$Oggetto->insertOggetto('dsicn');
+		}
+		
+		function rewriteEnd(){
+			echo "rewrite end: la serie di rewrite hanno funzionato";
+		}
+		
+		function cache(){
+			$cache = System_Load::Cache();
+			$cache->setKey('provacache');
+			$cache->setDeadLine(5);
+			if($cache->printOrBegin()){
+				echo time() . '<br/>';
+				$cache->endOutput();
+			}
+			
+		}
+		
+		function textintemplate(){
+			$view = System_Load::View();
+			$view->display('text');
 		}
 		
 		function tema($tema = 'default'){
-			$this->view->setTheme($tema);
-			$this->view->display('home', array());
-			
+			$view = System_Load::View();
+			$view->setTheme($tema);
+			$view->display('home', array('message' => 'ciao'));
+			$view->display('home', array('message' => 'ciao2'));
 		}
+
+
+		function principles(){
+			$t = new Text();
+			echo $t->getText('principles.text');
+		}
+
+
 		
 		function text($c){
 			$t = new Text();
 			switch($c){
-				case 1:
-					echo $t->tranformText('doc/01-Introduction.markdown');
+				case 10:
+					echo $t->get('doc/01-Introduction.markdown', 'markdown-extra');
 				break;
-				case 2:
-					echo $t->tranformText('doc/02-Twig-for-Template-Designers.markdown');
+				case 20:
+					$t->show('doc/02-Twig-for-Template-Designers.markdown', 'markdown-extra');
 				break;
-				case 3:
-					echo $t->tranformText('doc/03-Twig-for-Developers.markdown');
+				case 30:
+					echo $t->get('doc/03-Twig-for-Developers.markdown');
 				break;
-				case 4:
-					echo $t->tranformText('doc/04-Extending-Twig.markdown');
+				case 40:
+					$t->show('doc/04-Extending-Twig.markdown');
 				break;
-				case 5:
-					echo $t->tranformText('doc/05-Hacking-Twig.markdown');
+				case 50:
+					echo $t->get('doc/05-Hacking-Twig.markdown');
 				break;
-				case 5:
-					echo $t->tranformText('doc/06-Recipes.markdown');
+				case 60:
+					echo $t->get('doc/06-Recipes.markdown','markdown');
 				break;
 			}
 			
 		}
 		
-		/*function _filter($nomefunzione){
-			echo 'si voleva chiamare la funzione: ' . $nomefunzione . 'ma è stata bloccata';
-		}*/
+		function _filter($method, &$argv){
+			echo 'si voleva chiamare la funzione: ' . $method . ' ma è stata filtrata<br/>';
+			foreach($argv as $i) echo 'parametro: ' . $i . '<br/><br/>';
+			
+			if($method == 'text'){
+				if(sizeof($argv) == 0){
+					echo 'E\' stata chiamata la funzione text senza specificare un numero di capitolo<br/>';
+					echo 'I capitoli che si possono scegliere vanno da 1 a 6, adesso visualizzeremo il primo</br></br>';
+					$argv[0] = 10;
+				}else{
+					$argv[0] = (int)$argv[0] * 10;
+				}
+			}
+			
+			return true;
+		}
 	}
+	
 ?>

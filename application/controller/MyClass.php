@@ -1,6 +1,6 @@
 <?php
 
-	class MyClass extends System_Controller {
+	class Controller_MyClass {
 		
 		private function privateFunction(){
 			//this function can't be called
@@ -36,7 +36,7 @@
 		}
 		
 		function oggetto(){
-			$Oggetto = System_Load::Model('Prova/Oggetto');
+			$Oggetto = new Model_Prova_Oggetto();
 			$Oggetto->insertOggetto('dsicn');
 		}
 		

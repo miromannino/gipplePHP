@@ -1,6 +1,6 @@
 <?php
 
-	class Home extends System_Controller {
+	class Controller_Home {
 		
 		public function __construct(){
 			$this->view = System_Load::View();

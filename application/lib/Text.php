@@ -3,20 +3,19 @@
 		
 		private $base;
 		private $cache;
+		private $default_parser;
 		
-		public function __construct($base = ''){
-			if (strlen($base) == 0){
-				$this->base = RootPath . '/resource/text';
-			}else{
-				$this->base = $base;
-			}
-			
+		public function __construct(){
+			$config = System_Configuration::get('text');
+			$this->base = $config['base'];		
+			$this->default_parser = $config['default_parser'];
 			$this->cache = System_Load::Cache();
 			
 			if(!file_exists($this->base)) throw new Exception('Text: text folder not exists');
 		}
 		
-		public function get($name, $type = 'markdown'){
+		public function get($name, $type = ''){
+			if (strlen($type) == 0) $type = $this->default_parser;
 			$filepath = $this->base . '/' . $name;
 			if(!file_exists($filepath)) throw new Exception('Text: file not found');
 			$cont = file_get_contents($filepath);
@@ -50,4 +49,3 @@
 		}
 	}
 ?>
-

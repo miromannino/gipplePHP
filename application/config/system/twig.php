@@ -2,6 +2,9 @@
 	
 	/* Twig configuration ----------------------------*/
 	return array(
+	
+		'autoescape' => false,
+		
 		'cache' => true,
 		'i18n_extension' => false,
 		'escaper_extension' => false,

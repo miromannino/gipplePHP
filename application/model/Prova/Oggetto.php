@@ -1,5 +1,5 @@
 <?php
-	class Prova_Oggetto {
+	class Model_Prova_Oggetto {
 		
 		public function __construct(){
 			$this->db1 = System_Load::Database('db1');
