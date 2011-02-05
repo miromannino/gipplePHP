@@ -9,7 +9,7 @@
 		
 		function _index(){
 			echo 'chiamata classe senza specificare una funzione, funzioni disponibili: <br>';
-			echo '- funzione($p1,$p2,$p3) per provare a passare meno o più parametri<br>';
+			echo '- parametri($p1,$p2,$p3) per provare a passare meno o più parametri<br>';
 			echo '- oggetto() per provare il model<br>';
 			echo '- tema($tema) per provare il tema<br>';
 		}

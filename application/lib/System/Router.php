@@ -105,7 +105,13 @@
 		}
 		
 		private static function getRoute(){
-			if(isset($_SERVER['PATH_INFO'])) return $_SERVER['PATH_INFO']; else return '';
+			if(isset($_SERVER['PATH_INFO'])){
+				return $_SERVER['PATH_INFO'];
+			}else if(isset($_GET[_Router_getVar])){
+				return $_GET[_Router_getVar];
+			}else{
+				return '';
+			}
 		}
 
 	}

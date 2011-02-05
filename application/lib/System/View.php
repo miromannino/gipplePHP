@@ -30,7 +30,7 @@
 		public function __construct(){
 			//loading configurations
 			$app_config = System_Configuration::get('application');
-			$twig_config = System_Configuration::get('system/twig');
+			$twig_config = System_Configuration::get('twig');
 			
 			//set default theme
 			if(isset($app_config['default_theme']))
@@ -49,6 +49,11 @@
 			if($twig_config['cache']){
 				$config['cache'] = AppPath . '/cache/twig';
 				$config['auto_reload'] = true;
+				
+				if(!file_exists($config['cache'])){
+					if(! @mkdir($config['cache'], 0777, true)) throw new Exception('path: ' . AppPath . '/cache', System_Error::E_MAIN_FOLDERNOTWRITABLE);
+				}
+				
 				if(!is_writable($config['cache'])){
 					throw new Exception('path: ' . $config['cache'], System_Error::E_MAIN_FOLDERNOTWRITABLE);
 				}

@@ -11,7 +11,7 @@
 	/* Router ---------------------------------------- */
 	define('_Router_LoopMax', 10);
 	define('_Router_DefaultCaseSensitive', false);
-	define('_Router_DefaultRouteIndex', 'home');
+	define('_Router_getVar', 'path_info');
 	
 	/* Controller ------------------------------------ */
 	define('_Controller_indexMethodName', '_index'); //function to call in case of a path that contains only class name

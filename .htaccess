@@ -1,11 +1,25 @@
 RewriteEngine On
 Options -Multiviews
-RewriteBase /
 
+
+RewriteBase /
 # if is not in the root: 
 # RewriteBase /path/to/subfolder
 
-RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteCond %{REQUEST_URI} !-f
 RewriteCond $1 !^(index\.php|style|script|resource)
 
-RewriteRule ^(.*)$ index.php/$1 [L]
+
+# PATH_INFO - Method
+
+#	RewriteRule ^(.*)$ index.php/$1 [L]
+
+# END - PATH_INFO - Method
+
+
+# QUERY_STRING - Method
+
+	RewriteRule ^(.+)$ index.php?path_info=$1&%{QUERY_STRING} [L]
+
+# END - QUERY_STRING - Method
