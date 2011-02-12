@@ -154,10 +154,10 @@ class CachePHP_Cache {
 		
 		$folder = dirname($this->cacheKey);
 		if(!file_exists($folder)){
-			if(! @mkdir($folder, 0777, true)) throw new Exception('CachePHP: cannot write to cache folder');
+			if(! @mkdir($folder, 0777, true)) throw new Exception('CachePHP: cannot write to cache folder. Key: ' . $this->cacheKey);
 		}
 		
-		if(! @file_put_contents($this->cacheKey, $content, LOCK_EX)) throw new Exception('CachePHP: cannot write to cache folder');
+		if(FALSE === @file_put_contents($this->cacheKey, $content, LOCK_EX)) throw new Exception('CachePHP: cannot write to cache folder. Key: ' . $this->cacheKey);
 	}
 	
 	public function printOrBegin(){

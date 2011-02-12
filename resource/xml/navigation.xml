@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<navigation>
+  <item id="chi-siamo" title="Chi Siamo" link="/chi-siamo" />
+  <item id="locale" title="Il Locale" link="/locale" />
+  <item id="orari" title="Orari" link="/orari" />
+  
+  <item id="dove-siamo" title="Dove siamo" link="/dove-siamo" />
+  <item id="contattaci" title="Contattaci" link="/contattaci" />
+  <item id="galleries" title="Galleria" link="/galleries"/>
+  
+  
+  
+  <section id="cantina" title="Cantina">
+    <item id="rossi" title="Rossi" link="/cantina/cat/rossi" />
+    <item id="bianchi" title="Bianchi" link="/cantina/cat/bianchi" />
+    <item id="spumanti" title="Spumanti" link="/cantina/cat/spumanti" />
+    <item id="champagne" title="Champagne" link="/cantina/cat/champagne" />
+  </section>
+
+  <section id="menu" title="Menu">
+    <item id="antipasti" title="Antipasti" link="/menu/cat/antipasti" />
+    <item id="primi" title="Primi" link="/menu/cat/primi" />
+    <item id="zuppe" title="Zuppe" link="/menu/cat/zuppe" />
+    <item id="contorni" title="Contorni" link="/menu/cat/contorni" />
+    <item id="pizze" title="Pizze" link="/menu/cat/pizze" />
+    <item id="bevande" title="Bevande" link="/menu/cat/bevande" />
+    <item id="dessert" title="Dessert" link="/menu/cat/dessert" />
+  </section>
+  
+  <section id="menu-fissi" title="Menu Degustazione">
+    <item id="degustazione-carne" title="Carne" link="/menu-fissi/id/degustazione-carne" />
+    <item id="degustazione-pesce" title="Pesce" link="/menu-fissi/id/degustazione-pesce" />
+  </section>
+  
+
+  <label text="In primo piano" />
+  
+  <item id="san-valentino" title="San Valentino" link="/menu-fissi/id/san-valentino" />
+
+
+</navigation>
