@@ -6,7 +6,7 @@
 			'dsn' => 'mysql:host=localhost;dbname=prove',
 			'usr' => 'prova',
 			'psw' => 'prova',
-			/*'pdo_options' => null*/
+			/*'opt' => null*/
 		)
 	);
 	

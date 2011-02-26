@@ -23,7 +23,8 @@
 			}else{
 				return new PDO($db_config[$db_name]['dsn'], 
 							   $db_config[$db_name]['usr'],
-							   $db_config[$db_name]['psw']);
+							   $db_config[$db_name]['psw'],
+							   array(PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8"));
 			}
 		}
 		
