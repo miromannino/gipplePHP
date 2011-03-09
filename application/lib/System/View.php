@@ -13,7 +13,7 @@
 		}
 		
 		public function render($template, $variables = array()){
-			$t = $this->$twig->loadTemplate($template . _Template_Ext);
+			$t = $this->twig->loadTemplate($template . _Template_Ext);
 			return $t->render($variables);
 		}
 		
